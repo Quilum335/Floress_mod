@@ -4,18 +4,25 @@ import com.floressmod.FloressMod;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
 
 /**
- * Шкала репутации дерева — рисуется на месте полоски опыта
- * (сама полоска опыта скрыта InGameHudMixin).
- * -100..100, изначально посередине (0). Рост — зелёное вправо,
- * падение — красное влево.
+ * Шкала репутации дерева — текстура hud_rep.png на месте полоски опыта
+ * (сама полоска опыта и число уровня скрыты InGameHudMixin; сам опыт
+ * и его получение остаются ванильными).
+ * Текстура 184x18: верхняя половина (0-8) — фон, нижняя (9-17) — заполнение.
+ * Шкала -100..100, изначально посередине: рост заполняет вправо, падение — влево.
+ * Сверху по центру — маска коровы (golov.png).
  */
 public final class ReputationHud {
-	private static final int BAR_WIDTH = 182;
-	private static final int BAR_HEIGHT = 5;
+	private static final Identifier BAR_TEXTURE = Identifier.of(FloressMod.MOD_ID, "textures/gui/hud_rep.png");
+	private static final Identifier MASK_TEXTURE = Identifier.of(FloressMod.MOD_ID, "textures/gui/golov.png");
+
+	private static final int BAR_WIDTH = 184;
+	private static final int BAR_HEIGHT = 9;
+	private static final int HALF = BAR_WIDTH / 2;
 
 	private ReputationHud() {}
 
@@ -33,25 +40,28 @@ public final class ReputationHud {
 		}
 		int reputation = ClientReputation.get();
 
-		int x = context.getScaledWindowWidth() / 2 - BAR_WIDTH / 2;
-		int y = context.getScaledWindowHeight() - 32 + 3; // ровно там, где была полоска опыта
+		int centerX = context.getScaledWindowWidth() / 2;
+		int x = centerX - HALF;
+		int y = context.getScaledWindowHeight() - 33; // на месте полоски опыта
 
-		// фон
-		context.fill(x - 1, y - 1, x + BAR_WIDTH + 1, y + BAR_HEIGHT + 1, 0xFF101010);
-		context.fill(x, y, x + BAR_WIDTH, y + BAR_HEIGHT, 0xFF3A2E20);
+		context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
+				x, y, 0, 0, BAR_WIDTH, BAR_HEIGHT, 184, 18);
 
-		int center = x + BAR_WIDTH / 2;
-		int amount = (int) (Math.abs(reputation) / 100.0 * (BAR_WIDTH / 2 - 2));
+		int amount = (int) (Math.abs(reputation) / 100.0 * HALF);
 		if (reputation > 0) {
-			context.fill(center, y, center + amount, y + BAR_HEIGHT, 0xFF4CAF50);
+			context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
+					centerX, y, HALF, 9, amount, BAR_HEIGHT, 184, 18);
 		} else if (reputation < 0) {
-			context.fill(center - amount, y, center, y + BAR_HEIGHT, 0xFFB23A2E);
+			context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
+					centerX - amount, y, HALF - amount, 9, amount, BAR_HEIGHT, 184, 18);
 		}
-		// центральная метка
-		context.fill(center, y - 1, center + 1, y + BAR_HEIGHT + 1, 0xFFFFFFFF);
+
+		// маска коровы — над шкалой, посередине между сердцами и едой
+		context.drawTexture(RenderLayer::getGuiTextured, MASK_TEXTURE,
+				centerX - 4, y - 10, 0, 0, 8, 8, 8, 8);
 
 		String text = String.valueOf(reputation);
 		int color = reputation >= 0 ? 0xA0FFA0 : 0xFFA0A0;
-		context.drawCenteredTextWithShadow(client.textRenderer, text, center, y - 9, color);
+		context.drawTextWithShadow(client.textRenderer, text, centerX + 7, y - 10, color);
 	}
 }
