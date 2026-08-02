@@ -1,0 +1,12 @@
+{
+	"required": true,
+	"package": "com.floressmod.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"ChickenEntityMixin",
+		"MobSpawnerLogicMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "floress_mod",
+	"version": "${version}",
+	"name": "Floress Mod",
+	"description": "Репутация дерева, плоды-ивенты, черви и живые грибы. Мод для ролика.",
+	"authors": [
+		"Burynochek"
+	],
+	"contact": {},
+	"license": "MIT",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"com.floressmod.FloressMod"
+		],
+		"client": [
+			"com.floressmod.client.FloressClientMod"
+		]
+	},
+	"mixins": [
+		"floress_mod.mixins.json",
+		{
+			"config": "floress_mod.client.mixins.json",
+			"environment": "client"
+		}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~1.21.4",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {}
+}
