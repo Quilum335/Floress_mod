@@ -1,10 +1,13 @@
 package com.floressmod.client;
 
+import com.floressmod.registry.ModBlocks;
 import com.floressmod.registry.ModEntities;
 import com.floressmod.reputation.ReputationSyncPayload;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.client.render.RenderLayer;
 
 public class FloressClientMod implements ClientModInitializer {
 	@Override
@@ -18,5 +21,8 @@ public class FloressClientMod implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntities.LIVING_MUSHROOM, LivingMushroomRenderer::new);
 		EntityRendererRegistry.register(ModEntities.FLY, FlyRenderer::new);
 		EntityRendererRegistry.register(ModEntities.FALLING_FRUIT, FallingFruitRenderer::new);
+
+		BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutoutMipped(),
+				ModBlocks.DEAD_LEAVES, ModBlocks.POISON_IVY, ModBlocks.AMANITA, ModBlocks.FRUIT);
 	}
 }
