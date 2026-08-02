@@ -3,9 +3,16 @@
 	"package": "com.floressmod.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
+		"AbstractBlockMixin",
+		"BlockMixin",
 		"ChickenEntityMixin",
+		"FlowerPotBlockMixin",
+		"FlowableFluidMixin",
+		"GlassBottleItemMixin",
 		"LeavesBlockMixin",
-		"MobSpawnerLogicMixin"
+		"LivingEntityMixin",
+		"MobSpawnerLogicMixin",
+		"MushroomPlantBlockMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

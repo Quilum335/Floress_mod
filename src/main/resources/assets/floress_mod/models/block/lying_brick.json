@@ -1,0 +1,20 @@
+{
+	"textures": {
+		"particle": "minecraft:block/bricks",
+		"brick": "minecraft:block/bricks"
+	},
+	"elements": [
+		{
+			"from": [4, 0, 5],
+			"to": [12, 3, 11],
+			"faces": {
+				"north": { "uv": [4, 13, 12, 16], "texture": "#brick" },
+				"east": { "uv": [5, 13, 11, 16], "texture": "#brick" },
+				"south": { "uv": [4, 13, 12, 16], "texture": "#brick" },
+				"west": { "uv": [5, 13, 11, 16], "texture": "#brick" },
+				"up": { "uv": [4, 5, 12, 11], "texture": "#brick" },
+				"down": { "uv": [4, 5, 12, 11], "texture": "#brick" }
+			}
+		}
+	]
+}

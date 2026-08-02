@@ -12,14 +12,13 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Сохраняемые данные мода: репутация игроков и счётчик
- * набранных бутылок для источников воды.
+ * Сохраняемые данные мода: репутация игроков.
+ * (Счётчики бутылок воды — отдельно, в world/WaterBottleState.)
  */
 public class FloressState extends PersistentState {
 	private static final String ID = "floress_mod_data";
 
 	private final Map<UUID, Integer> reputation = new HashMap<>();
-	private final Map<Long, Integer> waterUses = new HashMap<>();
 
 	public FloressState() {
 		super();
@@ -44,28 +43,11 @@ public class FloressState extends PersistentState {
 		this.markDirty();
 	}
 
-	public int getWaterUses(long pos) {
-		return this.waterUses.getOrDefault(pos, 0);
-	}
-
-	public void setWaterUses(long pos, int uses) {
-		if (uses <= 0) {
-			this.waterUses.remove(pos);
-		} else {
-			this.waterUses.put(pos, uses);
-		}
-		this.markDirty();
-	}
-
 	private static FloressState fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
 		FloressState state = new FloressState();
 		NbtCompound rep = nbt.getCompound("Reputation");
 		for (String key : rep.getKeys()) {
 			state.reputation.put(UUID.fromString(key), rep.getInt(key));
-		}
-		NbtCompound water = nbt.getCompound("WaterUses");
-		for (String key : water.getKeys()) {
-			state.waterUses.put(Long.parseLong(key), water.getInt(key));
 		}
 		return state;
 	}
@@ -75,9 +57,6 @@ public class FloressState extends PersistentState {
 		NbtCompound rep = new NbtCompound();
 		this.reputation.forEach((uuid, value) -> rep.putInt(uuid.toString(), value));
 		nbt.put("Reputation", rep);
-		NbtCompound water = new NbtCompound();
-		this.waterUses.forEach((pos, uses) -> water.putInt(Long.toString(pos), uses));
-		nbt.put("WaterUses", water);
 		return nbt;
 	}
 }

@@ -2,6 +2,8 @@ package com.floressmod.registry;
 
 import com.floressmod.FloressMod;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -13,21 +15,24 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 
 public final class ModItems {
 	private ModItems() {}
 
-	/** Червь — еда для размножения куриц (тег minecraft:chicken_food). */
+	/** Червяк — еда для размножения куриц (тег minecraft:chicken_food). */
 	public static final Item WORM = registerItem("worm", new Item(new Item.Settings()
 			.food(new FoodComponent.Builder().nutrition(1).saturationModifier(0.1f).build())
 			.registryKey(itemKey("worm"))));
 
 	public static final Item WORMY_DIRT = registerBlockItem("wormy_dirt", ModBlocks.WORMY_DIRT);
-	public static final Item LOOSE_BRICK = registerBlockItem("loose_brick", ModBlocks.LOOSE_BRICK);
-	public static final Item POISON_IVY = registerBlockItem("poison_ivy", ModBlocks.POISON_IVY);
+	public static final Item SOFT_TURF = registerBlockItem("soft_turf", ModBlocks.SOFT_TURF);
+	public static final Item LYING_BRICK = registerBlockItem("lying_brick", ModBlocks.LYING_BRICK);
+	public static final Item PLUSCH = registerBlockItem("plusch", ModBlocks.PLUSCH);
 	public static final Item DEAD_LEAVES = registerBlockItem("dead_leaves", ModBlocks.DEAD_LEAVES);
 	public static final Item AMANITA = registerBlockItem("amanita", ModBlocks.AMANITA);
+
+	/** Алиас-предмет для ванильного мухомора в горшке — у него своя модель в assets. */
+	public static final Item POTTED_RED_MUSHROOM = registerAliasedBlockItem("potted_red_mushroom", Blocks.POTTED_RED_MUSHROOM);
 
 	public static final Item LIVING_MUSHROOM_SPAWN_EGG = registerItem("living_mushroom_spawn_egg",
 			new SpawnEggItem(ModEntities.LIVING_MUSHROOM,
@@ -37,34 +42,44 @@ public final class ModItems {
 					new Item.Settings().registryKey(itemKey("fly_spawn_egg"))));
 
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP,
-			Identifier.of(FloressMod.MOD_ID, "main"),
+			FloressMod.id("main"),
 			FabricItemGroup.builder()
 					.icon(() -> new ItemStack(AMANITA))
 					.displayName(Text.translatable("itemGroup.floress_mod"))
 					.entries((context, entries) -> {
 						entries.add(WORM);
 						entries.add(WORMY_DIRT);
-						entries.add(LOOSE_BRICK);
-						entries.add(POISON_IVY);
+						entries.add(SOFT_TURF);
+						entries.add(LYING_BRICK);
+						entries.add(PLUSCH);
 						entries.add(DEAD_LEAVES);
 						entries.add(AMANITA);
+						entries.add(POTTED_RED_MUSHROOM);
 						entries.add(LIVING_MUSHROOM_SPAWN_EGG);
 						entries.add(FLY_SPAWN_EGG);
 					})
 					.build());
 
 	private static RegistryKey<Item> itemKey(String name) {
-		return RegistryKey.of(RegistryKeys.ITEM, Identifier.of(FloressMod.MOD_ID, name));
+		return RegistryKey.of(RegistryKeys.ITEM, FloressMod.id(name));
 	}
 
 	private static Item registerItem(String name, Item item) {
 		return Registry.register(Registries.ITEM, itemKey(name), item);
 	}
 
-	private static Item registerBlockItem(String name, net.minecraft.block.Block block) {
+	private static Item registerBlockItem(String name, Block block) {
 		RegistryKey<Item> key = itemKey(name);
 		return Registry.register(Registries.ITEM, key,
 				new BlockItem(block, new Item.Settings().registryKey(key).useBlockPrefixedTranslationKey()));
+	}
+
+	private static Item registerAliasedBlockItem(String name, Block block) {
+		RegistryKey<Item> key = itemKey(name);
+		BlockItem item = new BlockItem(block, new Item.Settings().registryKey(key));
+		Item registered = Registry.register(Registries.ITEM, key, item);
+		item.appendBlocks(Item.BLOCK_ITEMS, registered);
+		return registered;
 	}
 
 	public static void register() {

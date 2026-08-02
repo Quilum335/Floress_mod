@@ -1,5 +1,7 @@
 {
 	"variants": {
-		"": { "model": "floress_mod:block/wormy_dirt" }
+		"": {
+			"model": "floress_mod:block/wormy_dirt"
+		}
 	}
 }
