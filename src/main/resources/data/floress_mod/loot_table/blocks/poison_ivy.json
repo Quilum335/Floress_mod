@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{ "type": "minecraft:item", "name": "floress_mod:poison_ivy" }
+			],
+			"conditions": [
+				{ "condition": "minecraft:survives_explosion" }
+			]
+		}
+	]
+}

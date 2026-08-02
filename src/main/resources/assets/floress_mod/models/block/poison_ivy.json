@@ -1,0 +1,17 @@
+{
+	"parent": "minecraft:block/block",
+	"textures": {
+		"vine": "floress_mod:block/poison_ivy",
+		"particle": "floress_mod:block/poison_ivy"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 15.2],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": { "uv": [0, 0, 16, 16], "texture": "#vine" },
+				"south": { "uv": [0, 0, 16, 16], "texture": "#vine" }
+			}
+		}
+	]
+}

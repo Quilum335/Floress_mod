@@ -30,10 +30,10 @@ public final class ModItems {
 	public static final Item AMANITA = registerBlockItem("amanita", ModBlocks.AMANITA);
 
 	public static final Item LIVING_MUSHROOM_SPAWN_EGG = registerItem("living_mushroom_spawn_egg",
-			new SpawnEggItem(ModEntities.LIVING_MUSHROOM, 0x9C2B2B, 0xE8D8B0,
+			new SpawnEggItem(ModEntities.LIVING_MUSHROOM,
 					new Item.Settings().registryKey(itemKey("living_mushroom_spawn_egg"))));
 	public static final Item FLY_SPAWN_EGG = registerItem("fly_spawn_egg",
-			new SpawnEggItem(ModEntities.FLY, 0x3B3B3B, 0x8A8A8A,
+			new SpawnEggItem(ModEntities.FLY,
 					new Item.Settings().registryKey(itemKey("fly_spawn_egg"))));
 
 	public static final ItemGroup GROUP = Registry.register(Registries.ITEM_GROUP,

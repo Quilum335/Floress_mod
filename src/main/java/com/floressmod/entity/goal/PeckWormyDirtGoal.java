@@ -7,7 +7,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -77,9 +76,18 @@ public class PeckWormyDirtGoal extends Goal {
 					soilPos.getX() + 0.5, soilPos.getY() + 1.0, soilPos.getZ() + 0.5,
 					8, 0.4, 0.4, 0.4, 0.05);
 			// репутация растёт у игрока, хотя чистят куры, а не он
-			PlayerEntity nearest = serverWorld.getClosestPlayer(this.chicken, FloressConfig.WORM_CLEAN_REP_RADIUS);
-			if (nearest instanceof ServerPlayerEntity serverPlayer) {
-				ReputationManager.add(serverPlayer, FloressConfig.REP_GAIN_WORMS_CLEANED);
+			ServerPlayerEntity nearest = null;
+			double nearestDistance = FloressConfig.WORM_CLEAN_REP_RADIUS;
+			for (ServerPlayerEntity candidate : net.fabricmc.fabric.api.networking.v1.PlayerLookup.around(
+					serverWorld, this.chicken.getPos(), FloressConfig.WORM_CLEAN_REP_RADIUS)) {
+				double distance = candidate.squaredDistanceTo(this.chicken);
+				if (distance <= nearestDistance * nearestDistance) {
+					nearest = candidate;
+					nearestDistance = Math.sqrt(distance);
+				}
+			}
+			if (nearest != null) {
+				ReputationManager.add(nearest, FloressConfig.REP_GAIN_WORMS_CLEANED);
 			}
 			this.stop();
 		}

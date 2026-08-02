@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.mob.ZombieEntity;
 import net.minecraft.entity.passive.ChickenEntity;
@@ -29,8 +30,8 @@ import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.explosion.ExplosionBehavior;
 
 /**
- * То, что происходит при падении плода. У всех плодов одинаковое
- * «начало» (зреют, падают), различается только этот эффект.
+ * РўРѕ, С‡С‚Рѕ РїСЂРѕРёСЃС…РѕРґРёС‚ РїСЂРё РїР°РґРµРЅРёРё РїР»РѕРґР°. РЈ РІСЃРµС… РїР»РѕРґРѕРІ РѕРґРёРЅР°РєРѕРІРѕРµ
+ * В«РЅР°С‡Р°Р»РѕВ» (Р·СЂРµСЋС‚, РїР°РґР°СЋС‚), СЂР°Р·Р»РёС‡Р°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ СЌС‚РѕС‚ СЌС„С„РµРєС‚.
  */
 public final class FruitLandEffects {
 	private FruitLandEffects() {}
@@ -61,11 +62,11 @@ public final class FruitLandEffects {
 		}
 	}
 
-	/** 1) Мухи — агрессивные, нападают на игрока. */
+	/** 1) РњСѓС…Рё вЂ” Р°РіСЂРµСЃСЃРёРІРЅС‹Рµ, РЅР°РїР°РґР°СЋС‚ РЅР° РёРіСЂРѕРєР°. */
 	private static void spawnFlies(ServerWorld world, BlockPos pos) {
-		int count = 3 + world.random.nextInt(3); // 3–5
+		int count = 3 + world.random.nextInt(3); // 3вЂ“5
 		for (int i = 0; i < count; i++) {
-			FlyEntity fly = ModEntities.FLY.create(world);
+			FlyEntity fly = ModEntities.FLY.create(world, SpawnReason.EVENT);
 			if (fly == null) continue;
 			fly.refreshPositionAndAngles(
 					pos.getX() + 0.5 + world.random.nextGaussian(),
@@ -76,33 +77,33 @@ public final class FruitLandEffects {
 		}
 	}
 
-	/** 2) Урожай — картошка и морковь. */
+	/** 2) РЈСЂРѕР¶Р°Р№ вЂ” РєР°СЂС‚РѕС€РєР° Рё РјРѕСЂРєРѕРІСЊ. */
 	private static void dropHarvest(ServerWorld world, BlockPos pos) {
 		Block.dropStack(world, pos, new ItemStack(Items.POTATO, 2 + world.random.nextInt(3)));
 		Block.dropStack(world, pos, new ItemStack(Items.CARROT, 2 + world.random.nextInt(3)));
 		world.playSound(null, pos, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.BLOCKS, 0.8f, 0.9f);
 	}
 
-	/** 3) Бомба — ломает блоки КРОМЕ природных, мухоморы становятся живыми. */
+	/** 3) Р‘РѕРјР±Р° вЂ” Р»РѕРјР°РµС‚ Р±Р»РѕРєРё РљР РћРњР• РїСЂРёСЂРѕРґРЅС‹С…, РјСѓС…РѕРјРѕСЂС‹ СЃС‚Р°РЅРѕРІСЏС‚СЃСЏ Р¶РёРІС‹РјРё. */
 	private static void explode(ServerWorld world, BlockPos pos) {
 		ExplosionBehavior behavior = new ExplosionBehavior() {
 			@Override
 			public boolean canDestroyBlock(Explosion explosion, net.minecraft.world.BlockView view, BlockPos blockPos, BlockState state, float power) {
-				// брёвна, дёрн/земля, листва и вообще всё природное — не трогаем
+				// Р±СЂС‘РІРЅР°, РґС‘СЂРЅ/Р·РµРјР»СЏ, Р»РёСЃС‚РІР° Рё РІРѕРѕР±С‰Рµ РІСЃС‘ РїСЂРёСЂРѕРґРЅРѕРµ вЂ” РЅРµ С‚СЂРѕРіР°РµРј
 				return !state.isIn(ModTags.EXPLOSION_NATURAL);
 			}
 		};
 		world.createExplosion(null, null, behavior, Vec3d.ofCenter(pos),
 				FloressConfig.FRUIT_EXPLOSION_POWER, false, World.ExplosionSourceType.BLOCK);
 
-		// мухоморы в радиусе превращаются в ЖИВЫХ грибов
+		// РјСѓС…РѕРјРѕСЂС‹ РІ СЂР°РґРёСѓСЃРµ РїСЂРµРІСЂР°С‰Р°СЋС‚СЃСЏ РІ Р–РР’Р«РҐ РіСЂРёР±РѕРІ
 		int r = FloressConfig.FRUIT_EXPLOSION_AMANITA_RADIUS;
 		int converted = 0;
 		for (BlockPos check : BlockPos.iterate(pos.add(-r, -r, -r), pos.add(r, r, r))) {
 			if (converted >= 12) break;
 			if (world.getBlockState(check).getBlock() instanceof AmanitaBlock) {
 				world.removeBlock(check, false);
-				LivingMushroomEntity mushroom = ModEntities.LIVING_MUSHROOM.create(world);
+				LivingMushroomEntity mushroom = ModEntities.LIVING_MUSHROOM.create(world, SpawnReason.EVENT);
 				if (mushroom != null) {
 					mushroom.refreshPositionAndAngles(check.getX() + 0.5, check.getY(), check.getZ() + 0.5,
 							world.random.nextFloat() * 360.0f, 0.0f);
@@ -113,11 +114,11 @@ public final class FruitLandEffects {
 		}
 	}
 
-	/** 4) Кролики. */
+	/** 4) РљСЂРѕР»РёРєРё. */
 	private static void spawnRabbits(ServerWorld world, BlockPos pos) {
-		int count = 2 + world.random.nextInt(2); // 2–3
+		int count = 2 + world.random.nextInt(2); // 2вЂ“3
 		for (int i = 0; i < count; i++) {
-			RabbitEntity rabbit = EntityType.RABBIT.create(world);
+			RabbitEntity rabbit = EntityType.RABBIT.create(world, SpawnReason.EVENT);
 			if (rabbit == null) continue;
 			rabbit.refreshPositionAndAngles(
 					pos.getX() + 0.5 + world.random.nextGaussian(),
@@ -128,7 +129,7 @@ public final class FruitLandEffects {
 		}
 	}
 
-	/** 5) Зомби в железной броне (не фул сет) + живые грибы. */
+	/** 5) Р—РѕРјР±Рё РІ Р¶РµР»РµР·РЅРѕР№ Р±СЂРѕРЅРµ (РЅРµ С„СѓР» СЃРµС‚) + Р¶РёРІС‹Рµ РіСЂРёР±С‹. */
 	private static void spawnZombies(ServerWorld world, BlockPos pos) {
 		EquipmentSlot[] armorSlots = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET};
 		ItemStack[] ironArmor = {
@@ -138,23 +139,23 @@ public final class FruitLandEffects {
 				new ItemStack(Items.IRON_BOOTS)
 		};
 		for (int i = 0; i < 2; i++) {
-			ZombieEntity zombie = EntityType.ZOMBIE.create(world);
+			ZombieEntity zombie = EntityType.ZOMBIE.create(world, SpawnReason.EVENT);
 			if (zombie == null) continue;
 			zombie.refreshPositionAndAngles(
 					pos.getX() + 0.5 + world.random.nextGaussian(),
 					pos.getY() + 0.5,
 					pos.getZ() + 0.5 + world.random.nextGaussian(),
 					world.random.nextFloat() * 360.0f, 0.0f);
-			// не фул сет: 2 случайных элемента брони
+			// РЅРµ С„СѓР» СЃРµС‚: 2 СЃР»СѓС‡Р°Р№РЅС‹С… СЌР»РµРјРµРЅС‚Р° Р±СЂРѕРЅРё
 			int first = world.random.nextInt(armorSlots.length);
 			int second = (first + 1 + world.random.nextInt(armorSlots.length - 1)) % armorSlots.length;
 			zombie.equipStack(armorSlots[first], ironArmor[first].copy());
 			zombie.equipStack(armorSlots[second], ironArmor[second].copy());
 			world.spawnEntity(zombie);
 		}
-		int mushrooms = 1 + world.random.nextInt(2); // 1–2
+		int mushrooms = 1 + world.random.nextInt(2); // 1вЂ“2
 		for (int i = 0; i < mushrooms; i++) {
-			LivingMushroomEntity mushroom = ModEntities.LIVING_MUSHROOM.create(world);
+			LivingMushroomEntity mushroom = ModEntities.LIVING_MUSHROOM.create(world, SpawnReason.EVENT);
 			if (mushroom == null) continue;
 			mushroom.refreshPositionAndAngles(
 					pos.getX() + 0.5 + world.random.nextGaussian(),
@@ -165,11 +166,11 @@ public final class FruitLandEffects {
 		}
 	}
 
-	/** 6) Курицы + саженцы случайных деревьев. */
+	/** 6) РљСѓСЂРёС†С‹ + СЃР°Р¶РµРЅС†С‹ СЃР»СѓС‡Р°Р№РЅС‹С… РґРµСЂРµРІСЊРµРІ. */
 	private static void spawnChickensAndSaplings(ServerWorld world, BlockPos pos) {
-		int chickens = 2 + world.random.nextInt(3); // 2–4
+		int chickens = 2 + world.random.nextInt(3); // 2вЂ“4
 		for (int i = 0; i < chickens; i++) {
-			ChickenEntity chicken = EntityType.CHICKEN.create(world);
+			ChickenEntity chicken = EntityType.CHICKEN.create(world, SpawnReason.EVENT);
 			if (chicken == null) continue;
 			chicken.refreshPositionAndAngles(
 					pos.getX() + 0.5 + world.random.nextGaussian(),
@@ -185,7 +186,7 @@ public final class FruitLandEffects {
 				Blocks.CHERRY_SAPLING
 		};
 		int planted = 0;
-		int target = 3 + world.random.nextInt(3); // 3–5 саженцев
+		int target = 3 + world.random.nextInt(3); // 3вЂ“5 СЃР°Р¶РµРЅС†РµРІ
 		for (int attempt = 0; attempt < 24 && planted < target; attempt++) {
 			int dx = world.random.nextInt(7) - 3;
 			int dz = world.random.nextInt(7) - 3;
@@ -199,7 +200,7 @@ public final class FruitLandEffects {
 		}
 	}
 
-	/** Ищет ближайший блок земли/дерна сверху вниз в маленьком диапазоне. */
+	/** РС‰РµС‚ Р±Р»РёР¶Р°Р№С€РёР№ Р±Р»РѕРє Р·РµРјР»Рё/РґРµСЂРЅР° СЃРІРµСЂС…Сѓ РІРЅРёР· РІ РјР°Р»РµРЅСЊРєРѕРј РґРёР°РїР°Р·РѕРЅРµ. */
 	private static BlockPos findGround(ServerWorld world, BlockPos from) {
 		BlockPos.Mutable cursor = from.mutableCopy();
 		for (int i = 0; i < 5; i++) {
@@ -212,3 +213,4 @@ public final class FruitLandEffects {
 		return null;
 	}
 }
+

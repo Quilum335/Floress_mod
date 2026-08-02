@@ -1,0 +1,14 @@
+{
+	"itemGroup.floress_mod": "Floress Mod",
+	"block.floress_mod.wormy_dirt": "Wormy Dirt",
+	"block.floress_mod.loose_brick": "Brick",
+	"block.floress_mod.poison_ivy": "Poison Ivy",
+	"block.floress_mod.dead_leaves": "Dead Leaves",
+	"block.floress_mod.amanita": "Amanita",
+	"block.floress_mod.fruit": "Tree Fruit",
+	"item.floress_mod.worm": "Worm",
+	"item.floress_mod.living_mushroom_spawn_egg": "Living Mushroom Spawn Egg",
+	"item.floress_mod.fly_spawn_egg": "Fly Spawn Egg",
+	"entity.floress_mod.living_mushroom": "Living Mushroom",
+	"entity.floress_mod.fly": "Fly"
+}

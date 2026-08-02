@@ -21,12 +21,12 @@ public class FloressState extends PersistentState {
 	private final Map<UUID, Integer> reputation = new HashMap<>();
 	private final Map<Long, Integer> waterUses = new HashMap<>();
 
-	public FloressState(String id) {
-		super(id);
+	public FloressState() {
+		super();
 	}
 
 	public static final PersistentState.Type<FloressState> TYPE = new PersistentState.Type<>(
-			() -> new FloressState(ID),
+			FloressState::new,
 			FloressState::fromNbt,
 			null);
 
@@ -58,7 +58,7 @@ public class FloressState extends PersistentState {
 	}
 
 	private static FloressState fromNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registries) {
-		FloressState state = new FloressState(ID);
+		FloressState state = new FloressState();
 		NbtCompound rep = nbt.getCompound("Reputation");
 		for (String key : rep.getKeys()) {
 			state.reputation.put(UUID.fromString(key), rep.getInt(key));

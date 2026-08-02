@@ -1,0 +1,14 @@
+{
+	"itemGroup.floress_mod": "Floress Mod",
+	"block.floress_mod.wormy_dirt": "Земля с червями",
+	"block.floress_mod.loose_brick": "Кирпич",
+	"block.floress_mod.poison_ivy": "Ядовитый плющ",
+	"block.floress_mod.dead_leaves": "Мёртвая листва",
+	"block.floress_mod.amanita": "Мухомор",
+	"block.floress_mod.fruit": "Плод дерева",
+	"item.floress_mod.worm": "Червь",
+	"item.floress_mod.living_mushroom_spawn_egg": "Яйцо призыва живого гриба",
+	"item.floress_mod.fly_spawn_egg": "Яйцо призыва мухи",
+	"entity.floress_mod.living_mushroom": "Живой гриб",
+	"entity.floress_mod.fly": "Муха"
+}

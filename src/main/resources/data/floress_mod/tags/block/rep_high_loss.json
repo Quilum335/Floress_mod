@@ -1,0 +1,9 @@
+{
+	"replace": false,
+	"values": [
+		"#minecraft:logs",
+		"#minecraft:leaves",
+		"minecraft:hanging_roots",
+		"floress_mod:poison_ivy"
+	]
+}

@@ -80,11 +80,17 @@ public class FallingFruitEntity extends Entity {
 	}
 
 	@Override
+	public boolean damage(ServerWorld world, net.minecraft.entity.damage.DamageSource source, float amount) {
+		// падающий плод нельзя «убить» — он просто падает
+		return false;
+	}
+
+	@Override
 	protected void readCustomDataFromNbt(NbtCompound nbt) {
 		if (nbt.contains("FruitState")) {
-			NbtHelper.toBlockState(this.getWorld().getRegistryManager(), nbt.getCompound("FruitState"))
-					.result()
-					.ifPresent(this::setFruitState);
+			this.setFruitState(NbtHelper.toBlockState(
+					this.getWorld().getRegistryManager().getOrThrow(net.minecraft.registry.RegistryKeys.BLOCK),
+					nbt.getCompound("FruitState")));
 		}
 		this.timeFalling = nbt.getInt("TimeFalling");
 	}

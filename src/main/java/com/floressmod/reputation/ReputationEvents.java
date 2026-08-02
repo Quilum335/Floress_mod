@@ -111,7 +111,7 @@ public final class ReputationEvents {
 	/** Убийство живого гриба — небольшая потеря репутации. */
 	private static void registerLivingMushroomKill() {
 		net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register(
-				(entity, killedEntity) -> {
+				(world, entity, killedEntity) -> {
 					if (entity instanceof ServerPlayerEntity serverPlayer && killedEntity instanceof LivingMushroomEntity) {
 						ReputationManager.add(serverPlayer, FloressConfig.REP_LOSS_LIVING_MUSHROOM_KILL);
 					}
@@ -123,9 +123,7 @@ public final class ReputationEvents {
 			return false;
 		}
 		PotionContentsComponent contents = stack.get(DataComponentTypes.POTION_CONTENTS);
-		return contents != null && contents.potion()
-				.map(entry -> entry.matchesKey(Potions.WATER))
-				.orElse(false);
+		return contents != null && contents.matches(Potions.WATER);
 	}
 
 	private static void spawnHappyParticles(ServerWorld world, net.minecraft.util.math.BlockPos pos) {
