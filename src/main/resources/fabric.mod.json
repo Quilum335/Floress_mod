@@ -3,9 +3,9 @@
 	"id": "floress_mod",
 	"version": "${version}",
 	"name": "Floress Mod",
-	"description": "Репутация дерева, плоды-ивенты, черви и живые грибы. Мод для ролика.",
+	"description": "казуал мод",
 	"authors": [
-		"Burynochek"
+		"Granato_de, Quilum335"
 	],
 	"contact": {},
 	"license": "MIT",
@@ -31,5 +31,7 @@
 		"java": ">=21",
 		"fabric-api": "*"
 	},
-	"suggests": {}
+	"suggests": {
+		"carryon": "*"
+	}
 }

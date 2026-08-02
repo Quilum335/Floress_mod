@@ -1,0 +1,33 @@
+{
+	"multipart": [
+		{
+			"apply": {
+				"model": "floress_mod:block/soft_turf"
+			}
+		},
+		{
+			"when": {
+				"wear": "1"
+			},
+			"apply": {
+				"model": "floress_mod:block/turf_wear_1"
+			}
+		},
+		{
+			"when": {
+				"wear": "2"
+			},
+			"apply": {
+				"model": "floress_mod:block/turf_wear_2"
+			}
+		},
+		{
+			"when": {
+				"wear": "3"
+			},
+			"apply": {
+				"model": "floress_mod:block/turf_wear_3"
+			}
+		}
+	]
+}

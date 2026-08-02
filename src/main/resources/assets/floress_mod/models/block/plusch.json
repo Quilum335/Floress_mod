@@ -1,0 +1,41 @@
+{
+	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
+	"texture_size": [64, 64],
+	"textures": {
+		"1": "floress_mod:block/plusch",
+		"particle": "floress_mod:block/plusch"
+	},
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, 10, 13],
+			"faces": {
+				"north": {"uv": [8, 0, 13, 5], "texture": "#1"},
+				"east": {"uv": [8, 0, 13, 5], "texture": "#1"},
+				"south": {"uv": [8, 0, 13, 5], "texture": "#1"},
+				"west": {"uv": [8, 0, 13, 5], "texture": "#1"},
+				"up": {"uv": [8, 0, 13, 5], "texture": "#1"},
+				"down": {"uv": [8, 0, 13, 5], "texture": "#1"}
+			}
+		},
+		{
+			"from": [7.99, -0.01, -0.01],
+			"to": [8.01, 16.01, 16.01],
+			"rotation": {"angle": 45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"west": {"uv": [8, 0, 0, 8], "texture": "#1"}
+			}
+		},
+		{
+			"from": [7.99, -0.01, -0.01],
+			"to": [8.01, 16.01, 16.01],
+			"rotation": {"angle": -45, "axis": "y", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [0, 0, 8, 8], "texture": "#1"},
+				"west": {"uv": [8, 0, 0, 8], "texture": "#1"}
+			}
+		}
+	]
+}

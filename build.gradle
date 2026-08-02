@@ -11,6 +11,19 @@ base {
 }
 
 repositories {
+	mavenCentral()
+	maven {
+		name = "MinecraftLibraries"
+		url = "https://libraries.minecraft.net/"
+	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+	}
+	maven {
+		name = "MinecraftMirror"
+		url = "https://bmclapi2.bangbang93.com/maven"
+	}
 }
 
 loom {
@@ -28,7 +41,10 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "net.fabricmc:fabric-api:fabric-api:${project.fabric_api_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+
+	modCompileOnly "maven.modrinth:carry-on:XqSVU1Kv"
+	modLocalRuntime "maven.modrinth:carry-on:XqSVU1Kv"
 }
 
 processResources {
