@@ -34,6 +34,10 @@ public final class MushroomBounce {
 			Block.createCuboidShape(6.0, 10.0, 6.0, 10.0, 11.0, 10.0)
 	);
 
+	private static final double LIVING_RESTITUTION = 0.8;
+	private static final double OTHER_RESTITUTION = 0.65;
+
+	private static final Map<Entity, Boolean> FALL_BOUNCE_LOCK = new WeakHashMap<>();
 	private static final Map<Entity, Charge> CHARGES = new WeakHashMap<>();
 
 	private MushroomBounce() {
@@ -67,15 +71,46 @@ public final class MushroomBounce {
 	}
 
 	public static void onLandedUpon(World world, Entity entity, float fallDistance) {
-		entity.handleFallDamage(fallDistance, 0.0F, world.getDamageSources().fall());
-		Charge charge = CHARGES.get(entity);
-		if (charge != null && charge.leftGround) {
-			charge.leftGround = false;
-			charge.ready = true;
+		if (entity.bypassesLandingEffects()) {
+			return;
 		}
+		entity.handleFallDamage(fallDistance, 0.0F, world.getDamageSources().fall());
+	}
+
+	public static void applyFallBounce(Entity entity) {
+		if (entity.bypassesLandingEffects()) {
+			return;
+		}
+
+		Vec3d velocity = entity.getVelocity();
+		if (velocity.y >= 0.0) {
+			return;
+		}
+		if (Boolean.TRUE.equals(FALL_BOUNCE_LOCK.get(entity))) {
+			return;
+		}
+
+		double restitution = entity instanceof LivingEntity ? LIVING_RESTITUTION : OTHER_RESTITUTION;
+		entity.setVelocity(velocity.x, -velocity.y * restitution, velocity.z);
+		entity.velocityModified = true;
+		FALL_BOUNCE_LOCK.put(entity, true);
 	}
 
 	public static void tick(Entity entity) {
+		tickFallBounce(entity);
+		tickCharge(entity);
+	}
+
+	private static void tickFallBounce(Entity entity) {
+		if (!Boolean.TRUE.equals(FALL_BOUNCE_LOCK.get(entity))) {
+			return;
+		}
+		if (!entity.isOnGround()) {
+			FALL_BOUNCE_LOCK.put(entity, false);
+		}
+	}
+
+	private static void tickCharge(Entity entity) {
 		Charge charge = CHARGES.get(entity);
 		if (charge == null) {
 			return;
@@ -88,7 +123,7 @@ public final class MushroomBounce {
 			charge.leftGround = true;
 			return;
 		}
-		if (charge.leftGround && isStandingOnBounceBlock(entity)) {
+		if (charge.leftGround) {
 			charge.leftGround = false;
 			charge.ready = true;
 		}
@@ -97,6 +132,9 @@ public final class MushroomBounce {
 	public static void onJump(LivingEntity entity, float vanillaJumpY) {
 		if (entity.bypassesSteppingEffects() || !isStandingOnBounceBlock(entity)) {
 			CHARGES.remove(entity);
+			return;
+		}
+		if (Boolean.TRUE.equals(FALL_BOUNCE_LOCK.get(entity))) {
 			return;
 		}
 
