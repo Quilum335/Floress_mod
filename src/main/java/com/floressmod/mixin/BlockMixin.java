@@ -5,7 +5,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,27 +27,5 @@ public abstract class BlockMixin {
 		}
 		MushroomBounce.onLandedUpon(world, entity, fallDistance);
 		ci.cancel();
-	}
-
-	@Inject(method = "onEntityLand", at = @At("HEAD"), cancellable = true)
-	private void floress$mushroomEntityLand(BlockView world, Entity entity, CallbackInfo ci) {
-		if (!MushroomBounce.isBounceBlock((Block) (Object) this)) {
-			return;
-		}
-		if (entity.bypassesLandingEffects()) {
-			return;
-		}
-		if (!MushroomBounce.trySlimeBounce(entity)) {
-			return;
-		}
-		ci.cancel();
-	}
-
-	@Inject(method = "onSteppedOn", at = @At("HEAD"))
-	private void floress$mushroomSteppedOn(World world, BlockPos pos, BlockState state, Entity entity, CallbackInfo ci) {
-		if (!MushroomBounce.isBounceBlock(state)) {
-			return;
-		}
-		MushroomBounce.onSteppedOn(entity);
 	}
 }

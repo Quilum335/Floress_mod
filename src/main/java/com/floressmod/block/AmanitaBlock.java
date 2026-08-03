@@ -11,29 +11,28 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import net.minecraft.world.gen.feature.TreeConfiguredFeatures;
 
-/**
- * Мухомор. Стоя на мицелии, размножается костной мукой —
- * «раздваивается», как высокие цветы (выпадает копия предметом).
- */
 public class AmanitaBlock extends MushroomPlantBlock {
+	
 	public AmanitaBlock(Settings settings) {
 		super(TreeConfiguredFeatures.HUGE_RED_MUSHROOM, settings);
+	
 	}
 
+	
 	@Override
 	public boolean isFertilizable(WorldView world, BlockPos pos, BlockState state) {
-		// только на мицелии (по ТЗ)
+		return world.getBlockState(pos.down()).isOf(Blocks.MYCELIUM);
+	}
+
+	
+	
+	@Override
+	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
 		return world.getBlockState(pos.down()).isOf(Blocks.MYCELIUM);
 	}
 
 	@Override
-	public boolean canGrow(World world, Random random, BlockPos pos, BlockState state) {
-		return true;
-	}
-
-	@Override
 	public void grow(ServerWorld world, Random random, BlockPos pos, BlockState state) {
-		// не гигантский гриб, а дубликация — выпадает копия мухомора
 		dropStack(world, pos, new ItemStack(this));
 	}
 }

@@ -17,9 +17,9 @@ import net.minecraft.world.World;
 import java.util.UUID;
 
 public final class WormyDirtBlockEntity extends BlockEntity {
-	private static final int PECK_SOUND_INTERVAL = 25;
-	private static final int MIN_PECK_SECONDS = 90;
-	private static final int MAX_PECK_SECONDS = 150;
+	private static final int PECK_SOUND_INTERVAL = 20;
+	private static final int MIN_PECK_SECONDS = 5;
+	private static final int MAX_PECK_SECONDS = 5;
 
 	private int peckTicks;
 	private int peckDuration = -1;
