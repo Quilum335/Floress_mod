@@ -16,18 +16,40 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Optional;
 
 /**
- * Созревший плод, падающий с дерева. Приземлившись, запускает
- * эффект своего типа (FruitLandEffects) и исчезает — блоком не становится.
+ * Созревший плод, три фазы (авторские анимации из plod.json):
+ * RELEASE — висит и «отрывается» (трясётся, без гравитации),
+ * FALL — падает (гравитация),
+ * LAND — приземлился: срабатывает эффект типа и играется анимация разбития.
  */
-public class FallingFruitEntity extends Entity {
+public class FallingFruitEntity extends Entity implements GeoEntity {
+	public static final int PHASE_RELEASE = 0;
+	public static final int PHASE_FALL = 1;
+	public static final int PHASE_LAND = 2;
+
+	private static final int RELEASE_TICKS = 25; // длина release-анимации (1.25s)
+	private static final int LAND_TICKS = 10; // длина land-анимации (0.5s)
+
 	private static final TrackedData<Optional<BlockState>> FRUIT_STATE =
 			DataTracker.registerData(FallingFruitEntity.class, TrackedDataHandlerRegistry.OPTIONAL_BLOCK_STATE);
+	private static final TrackedData<Integer> PHASE =
+			DataTracker.registerData(FallingFruitEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-	private int timeFalling;
+	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
+	private int phaseTicks;
+	private int releaseJitter;
 
 	public FallingFruitEntity(EntityType<?> type, World world) {
 		super(type, world);
@@ -36,7 +58,9 @@ public class FallingFruitEntity extends Entity {
 	public static void spawn(ServerWorld world, BlockPos pos, BlockState fruitState) {
 		FallingFruitEntity entity = new FallingFruitEntity(ModEntities.FALLING_FRUIT, world);
 		entity.setFruitState(fruitState);
-		entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+		entity.releaseJitter = world.random.nextInt(41);
+		entity.setPosition(pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5);
+		entity.setNoGravity(true);
 		world.spawnEntity(entity);
 	}
 
@@ -48,9 +72,37 @@ public class FallingFruitEntity extends Entity {
 		this.dataTracker.set(FRUIT_STATE, Optional.of(state));
 	}
 
+	private int getPhase() {
+		return this.dataTracker.get(PHASE);
+	}
+
+	private void setPhase(int phase) {
+		this.dataTracker.set(PHASE, phase);
+		this.phaseTicks = 0;
+	}
+
 	@Override
 	protected void initDataTracker(DataTracker.Builder builder) {
 		builder.add(FRUIT_STATE, Optional.empty());
+		builder.add(PHASE, PHASE_RELEASE);
+	}
+
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+		controllers.add(new AnimationController<>(this, "main", 0, this::predicate));
+	}
+
+	private PlayState predicate(AnimationState<FallingFruitEntity> state) {
+		return switch (this.getPhase()) {
+			case PHASE_RELEASE -> state.setAndContinue(RawAnimation.begin().thenPlay("release"));
+			case PHASE_LAND -> state.setAndContinue(RawAnimation.begin().thenPlay("land"));
+			default -> state.setAndContinue(RawAnimation.begin().thenLoop("fall"));
+		};
+	}
+
+	@Override
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return this.cache;
 	}
 
 	@Override
@@ -62,26 +114,51 @@ public class FallingFruitEntity extends Entity {
 			}
 			return;
 		}
-		this.timeFalling++;
+		this.phaseTicks++;
+		switch (this.getPhase()) {
+			case PHASE_RELEASE -> tickRelease();
+			case PHASE_FALL -> tickFall();
+			case PHASE_LAND -> tickLand();
+		}
+	}
+
+	private void tickRelease() {
+		// висим на месте и трясёмся (анимация release), потом срываемся вниз
+		this.setVelocity(net.minecraft.util.math.Vec3d.ZERO);
+		if (!this.getWorld().isClient && this.phaseTicks >= RELEASE_TICKS + this.releaseJitter) {
+			this.setNoGravity(false);
+			this.setPhase(PHASE_FALL);
+		}
+	}
+
+	private void tickFall() {
 		this.setVelocity(this.getVelocity().add(0.0, -0.04, 0.0));
 		this.move(MovementType.SELF, this.getVelocity());
 		if (!this.getWorld().isClient) {
-			if (this.isOnGround() || this.timeFalling > 600) {
+			if (this.isOnGround() || this.phaseTicks > 600) {
+				this.setNoGravity(true);
+				this.setVelocity(net.minecraft.util.math.Vec3d.ZERO);
+				this.setPhase(PHASE_LAND);
 				BlockPos landingPos = this.getBlockPos();
 				this.getFruitState().ifPresent(state -> {
 					FruitType type = state.contains(FruitBlock.TYPE) ? state.get(FruitBlock.TYPE) : FruitType.HARVEST;
 					FruitLandEffects.trigger((ServerWorld) this.getWorld(), landingPos, type);
 				});
-				this.discard();
 				return;
 			}
 		}
 		this.setVelocity(this.getVelocity().multiply(0.98));
 	}
 
+	private void tickLand() {
+		this.setVelocity(net.minecraft.util.math.Vec3d.ZERO);
+		if (!this.getWorld().isClient && this.phaseTicks >= LAND_TICKS) {
+			this.discard();
+		}
+	}
+
 	@Override
 	public boolean damage(ServerWorld world, net.minecraft.entity.damage.DamageSource source, float amount) {
-		// падающий плод нельзя «убить» — он просто падает
 		return false;
 	}
 
@@ -92,13 +169,17 @@ public class FallingFruitEntity extends Entity {
 					this.getWorld().getRegistryManager().getOrThrow(net.minecraft.registry.RegistryKeys.BLOCK),
 					nbt.getCompound("FruitState")));
 		}
-		this.timeFalling = nbt.getInt("TimeFalling");
+		this.setPhase(nbt.getInt("Phase"));
+		this.phaseTicks = nbt.getInt("PhaseTicks");
+		this.releaseJitter = nbt.getInt("ReleaseJitter");
 	}
 
 	@Override
 	protected void writeCustomDataToNbt(NbtCompound nbt) {
 		this.getFruitState().ifPresent(state -> nbt.put("FruitState", NbtHelper.fromBlockState(state)));
-		nbt.putInt("TimeFalling", this.timeFalling);
+		nbt.putInt("Phase", this.getPhase());
+		nbt.putInt("PhaseTicks", this.phaseTicks);
+		nbt.putInt("ReleaseJitter", this.releaseJitter);
 	}
 
 	@Override

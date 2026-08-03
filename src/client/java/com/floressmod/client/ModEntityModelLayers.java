@@ -6,15 +6,12 @@ import net.minecraft.client.render.entity.model.EntityModelLayer;
 import net.minecraft.util.Identifier;
 
 public final class ModEntityModelLayers {
-	public static final EntityModelLayer LIVING_MUSHROOM =
-			new EntityModelLayer(Identifier.of(FloressMod.MOD_ID, "living_mushroom"), "main");
 	public static final EntityModelLayer FLY =
 			new EntityModelLayer(Identifier.of(FloressMod.MOD_ID, "fly"), "main");
 
 	private ModEntityModelLayers() {}
 
 	public static void register() {
-		EntityModelLayerRegistry.registerModelLayer(LIVING_MUSHROOM, LivingMushroomModel::getTexturedModelData);
 		EntityModelLayerRegistry.registerModelLayer(FLY, FlyModel::getTexturedModelData);
 	}
 }

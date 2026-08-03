@@ -13,15 +13,52 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
+import software.bernie.geckolib.animatable.GeoEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.AnimationState;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 /**
  * Живой гриб — агрессивный моб. Дерётся, бегает, ходит.
  * После смерти дропает мухомор (лут-таблица entities/living_mushroom).
- * Модель/текстура — временные заглушки, будут заменены.
+ * Модель и анимации (idle/walk/run/hit) — GeckoLib, авторские из gribg.bbmodel.
  */
-public class LivingMushroomEntity extends HostileEntity {
+public class LivingMushroomEntity extends HostileEntity implements GeoEntity {
+	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
+
 	public LivingMushroomEntity(EntityType<? extends HostileEntity> entityType, World world) {
 		super(entityType, world);
+	}
+
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+		controllers.add(new AnimationController<>(this, "movement", 5, this::movementPredicate));
+		controllers.add(new AnimationController<>(this, "attack", 0, this::attackPredicate));
+	}
+
+	private PlayState movementPredicate(AnimationState<LivingMushroomEntity> state) {
+		if (state.isMoving()) {
+			return state.setAndContinue(RawAnimation.begin()
+					.thenLoop(this.getVelocity().horizontalLengthSquared() > 0.04 ? "run" : "walk"));
+		}
+		return state.setAndContinue(RawAnimation.begin().thenLoop("idle"));
+	}
+
+	private PlayState attackPredicate(AnimationState<LivingMushroomEntity> state) {
+		if (this.handSwinging) {
+			state.getController().forceAnimationReset();
+			return state.setAndContinue(RawAnimation.begin().thenPlay("hit"));
+		}
+		return PlayState.STOP;
+	}
+
+	@Override
+	public AnimatableInstanceCache getAnimatableInstanceCache() {
+		return this.cache;
 	}
 
 	public static DefaultAttributeContainer.Builder createLivingMushroomAttributes() {

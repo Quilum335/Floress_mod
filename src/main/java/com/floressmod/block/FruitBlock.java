@@ -86,6 +86,12 @@ public class FruitBlock extends Block {
 			// время падать
 			if (world.getBlockState(pos.down()).isAir()) {
 				world.removeBlock(pos, false);
+				// отрывание: хруст ветки и пара частиц
+				world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES,
+						net.minecraft.sound.SoundCategory.BLOCKS, 0.8f, 0.9f);
+				world.spawnParticles(new net.minecraft.particle.BlockStateParticleEffect(
+								net.minecraft.particle.ParticleTypes.BLOCK, state),
+						pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 6, 0.25, 0.2, 0.25, 0.02);
 				FallingFruitEntity.spawn(world, pos, state.with(AGE, RIPE_AGE));
 			} else {
 				// падать некуда — срабатывает на месте

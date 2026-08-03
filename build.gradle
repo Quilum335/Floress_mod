@@ -24,6 +24,10 @@ repositories {
 		name = "MinecraftMirror"
 		url = "https://bmclapi2.bangbang93.com/maven"
 	}
+	maven {
+		name = "GeckoLib"
+		url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+	}
 }
 
 loom {
@@ -45,6 +49,9 @@ dependencies {
 
 	modCompileOnly "maven.modrinth:carry-on:XqSVU1Kv"
 	modLocalRuntime "maven.modrinth:carry-on:XqSVU1Kv"
+
+	modImplementation "software.bernie.geckolib:geckolib-fabric-1.21.4:4.8.5"
+	include "software.bernie.geckolib:geckolib-fabric-1.21.4:4.8.5"
 }
 
 processResources {

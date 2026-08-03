@@ -37,6 +37,15 @@ public final class FruitLandEffects {
 	private FruitLandEffects() {}
 
 	public static void trigger(ServerWorld world, BlockPos pos, FruitType type) {
+		// разбитие: «шлёп» и брызги кусками плода
+		world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_SLIME_BLOCK_BREAK,
+				net.minecraft.sound.SoundCategory.BLOCKS, 0.9f, 1.3f);
+		world.spawnParticles(new net.minecraft.particle.BlockStateParticleEffect(
+						net.minecraft.particle.ParticleTypes.BLOCK,
+						com.floressmod.registry.ModBlocks.FRUIT.getDefaultState()
+								.with(com.floressmod.block.FruitBlock.TYPE, type)
+								.with(com.floressmod.block.FruitBlock.AGE, com.floressmod.block.FruitBlock.RIPE_AGE)),
+				pos.getX() + 0.5, pos.getY() + 0.3, pos.getZ() + 0.5, 26, 0.45, 0.3, 0.45, 0.06);
 		spawnLandingParticles(world, pos, type.isGood());
 		switch (type) {
 			case FLY -> spawnFlies(world, pos);
