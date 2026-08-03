@@ -2,7 +2,7 @@
 	"multipart": [
 		{
 			"apply": {
-				"model": "floress_mod:block/dead_leaves"
+				"model": "floress_mod:block/leaves"
 			}
 		}
 	]

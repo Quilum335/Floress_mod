@@ -1,9 +1,11 @@
 package com.floressmod.block;
 
+import com.floressmod.FloressConfig;
+import com.floressmod.registry.ModBlocks;
+import com.floressmod.reputation.ReputationManager;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -15,8 +17,6 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import com.floressmod.FloressConfig;
-import com.floressmod.reputation.ReputationManager;
 
 public final class SoftTurfBlock extends Block {
 	public static final MapCodec<SoftTurfBlock> CODEC = createCodec(SoftTurfBlock::new);
@@ -77,7 +77,7 @@ public final class SoftTurfBlock extends Block {
 		world.playSound(null, pos, SoundEvents.BLOCK_GRASS_HIT, SoundCategory.BLOCKS, 0.6F, 0.8F);
 
 		if (wear >= 3) {
-			world.setBlockState(pos, Blocks.DIRT.getDefaultState(), Block.NOTIFY_ALL);
+			world.setBlockState(pos, ModBlocks.DIRT.getDefaultState(), Block.NOTIFY_ALL);
 			return;
 		}
 

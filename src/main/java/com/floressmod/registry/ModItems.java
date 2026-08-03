@@ -26,8 +26,10 @@ public final class ModItems {
 
 	public static final Item WORMY_DIRT = registerBlockItem("wormy_dirt", ModBlocks.WORMY_DIRT);
 	public static final Item SOFT_TURF = registerBlockItem("soft_turf", ModBlocks.SOFT_TURF);
+	public static final Item DIRT = registerBlockItem("dirt", ModBlocks.DIRT);
 	public static final Item LYING_BRICK = registerBlockItem("lying_brick", ModBlocks.LYING_BRICK);
 	public static final Item PLUSCH = registerBlockItem("plusch", ModBlocks.PLUSCH);
+	public static final Item LEAVES = registerBlockItem("leaves", ModBlocks.LEAVES);
 	public static final Item DEAD_LEAVES = registerBlockItem("dead_leaves", ModBlocks.DEAD_LEAVES);
 	public static final Item AMANITA = registerBlockItem("amanita", ModBlocks.AMANITA);
 
@@ -50,8 +52,10 @@ public final class ModItems {
 						entries.add(WORM);
 						entries.add(WORMY_DIRT);
 						entries.add(SOFT_TURF);
+						entries.add(DIRT);
 						entries.add(LYING_BRICK);
 						entries.add(PLUSCH);
+						entries.add(LEAVES);
 						entries.add(DEAD_LEAVES);
 						entries.add(AMANITA);
 						entries.add(POTTED_RED_MUSHROOM);

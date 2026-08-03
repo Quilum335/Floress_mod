@@ -3,6 +3,7 @@ package com.floressmod.registry;
 import com.floressmod.FloressMod;
 import com.floressmod.block.AmanitaBlock;
 import com.floressmod.block.DeadLeavesBlock;
+import com.floressmod.block.FloressLeavesBlock;
 import com.floressmod.block.FruitBlock;
 import com.floressmod.block.LyingBrickBlock;
 import com.floressmod.block.PluschBlock;
@@ -52,9 +53,6 @@ public final class ModBlocks {
 					.replaceable()
 					.pistonBehavior(PistonBehavior.DESTROY));
 
-	/** Мёртвая листва. Слом = рост репутации. */
-	public static final Block DEAD_LEAVES = register("dead_leaves", DeadLeavesBlock::new,
-			AbstractBlock.Settings.copy(Blocks.OAK_LEAVES));
 
 	/** Мухомор. На мицелии размножается костной мукой. */
 	public static final Block AMANITA = register("amanita", AmanitaBlock::new,
@@ -69,6 +67,16 @@ public final class ModBlocks {
 					.breakInstantly()
 					.nonOpaque()
 					.pistonBehavior(PistonBehavior.DESTROY));
+
+
+	public static final Block LEAVES = register("leaves", FloressLeavesBlock::new,
+			AbstractBlock.Settings.copy(Blocks.OAK_LEAVES));
+
+	public static final Block DEAD_LEAVES = register("dead_leaves", DeadLeavesBlock::new,
+			AbstractBlock.Settings.copy(Blocks.OAK_LEAVES));
+
+	public static final Block DIRT = register("dirt", Block::new,
+			AbstractBlock.Settings.copy(Blocks.DIRT));
 
 	private static Block register(String name, Function<AbstractBlock.Settings, Block> factory, AbstractBlock.Settings settings) {
 		RegistryKey<Block> key = RegistryKey.of(RegistryKeys.BLOCK, FloressMod.id(name));

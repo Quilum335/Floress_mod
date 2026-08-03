@@ -25,9 +25,11 @@
 		"minecraft:pumpkin",
 		"minecraft:melon",
 		"floress_mod:amanita",
+		"floress_mod:leaves",
 		"floress_mod:dead_leaves",
 		"floress_mod:plusch",
 		"floress_mod:soft_turf",
+		"floress_mod:dirt",
 		"floress_mod:fruit",
 		"floress_mod:wormy_dirt"
 	]
