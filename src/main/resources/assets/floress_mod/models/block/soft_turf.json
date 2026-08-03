@@ -1,10 +1,9 @@
 {
-	"parent": "minecraft:block/grass_block",
+	"parent": "minecraft:block/cube_bottom_top",
 	"textures": {
-		"particle": "minecraft:block/dirt",
-		"bottom": "minecraft:block/dirt",
-		"top": "minecraft:block/grass_block_top",
-		"side": "minecraft:block/grass_block_side",
-		"overlay": "minecraft:block/grass_block_side_overlay"
+		"bottom": "floress_mod:block/dirt",
+		"top": "floress_mod:block/grass_block_top",
+		"side": "floress_mod:block/grass_block",
+		"particle": "floress_mod:block/dirt"
 	}
 }

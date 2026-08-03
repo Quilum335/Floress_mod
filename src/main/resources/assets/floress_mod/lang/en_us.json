@@ -1,16 +1,23 @@
 {
+ "1comment": "Зачем бурёнке перевод на английский? Ну смотри сам...",
+
 	"itemGroup.floress_mod": "Floress Mod",
+
 	"item.floress_mod.worm": "Worm",
 	"item.floress_mod.potted_red_mushroom": "Potted Amanita",
 	"item.floress_mod.living_mushroom_spawn_egg": "Living Mushroom Spawn Egg",
 	"item.floress_mod.fly_spawn_egg": "Fly Spawn Egg",
+
 	"block.floress_mod.wormy_dirt": "Wormy Turf",
 	"block.floress_mod.soft_turf": "Soft Turf",
+	"block.floress_mod.dirt": "Dirt",
 	"block.floress_mod.lying_brick": "Lying Brick",
 	"block.floress_mod.plusch": "Poison Ivy",
+	"block.floress_mod.leaves": "Leaves",
 	"block.floress_mod.dead_leaves": "Dead Leaves",
 	"block.floress_mod.amanita": "Amanita",
 	"block.floress_mod.fruit": "Tree Fruit",
+
 	"entity.floress_mod.living_mushroom": "Living Mushroom",
 	"entity.floress_mod.fly": "Fly"
 }

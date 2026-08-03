@@ -1,8 +1,8 @@
 {
 	"replace": false,
 	"values": [
-		"floress_mod:wormy_dirt",
+		"floress_mod:dirt",
 		"floress_mod:soft_turf",
-		"floress_mod:dirt"
+		"floress_mod:wormy_dirt"
 	]
 }

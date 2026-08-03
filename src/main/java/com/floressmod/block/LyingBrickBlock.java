@@ -10,7 +10,8 @@ import net.minecraft.world.BlockView;
 
 public final class LyingBrickBlock extends Block {
 	public static final MapCodec<LyingBrickBlock> CODEC = createCodec(LyingBrickBlock::new);
-	private static final VoxelShape SHAPE = Block.createCuboidShape(4.0, 0.0, 5.0, 12.0, 3.0, 11.0);
+	
+	private static final VoxelShape SHAPE = Block.createCuboidShape(3.4, 0.0, 2.9, 12.6, 2.0, 12.1);
 
 	public LyingBrickBlock(Settings settings) {
 		super(settings);
