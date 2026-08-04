@@ -7,7 +7,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -57,7 +56,7 @@ public final class SoftTurfBlock extends Block {
 		if (world.isClient || !(world instanceof ServerWorld serverWorld)) {
 			return;
 		}
-		if (!(entity instanceof LivingEntity) || entity.bypassesSteppingEffects()) {
+		if (!(entity instanceof ServerPlayerEntity player) || entity.bypassesSteppingEffects()) {
 			return;
 		}
 		if (entity.age % 8 != 0) {
@@ -67,9 +66,7 @@ public final class SoftTurfBlock extends Block {
 			return;
 		}
 		trample(serverWorld, pos, state);
-		if (entity instanceof ServerPlayerEntity player) {
-			ReputationManager.add(player, FloressConfig.REP_LOW_LOSS);
-		}
+		ReputationManager.add(player, FloressConfig.REP_LOW_LOSS);
 	}
 
 	private static void trample(ServerWorld world, BlockPos pos, BlockState state) {
