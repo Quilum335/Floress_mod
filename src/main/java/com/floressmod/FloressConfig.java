@@ -13,20 +13,20 @@ public final class FloressConfig {
 	public static final int REP_DEFAULT = 0;
 
 	/** СИЛЬНАЯ потеря: брёвна, листва, ядовитый плющ, свисающие корни. */
-	public static final int REP_HIGH_LOSS = -5;
+	public static final int REP_HIGH_LOSS = -10;
 	/** НЕБОЛЬШАЯ потеря: дёрн, трава, морская трава, грибы. */
-	public static final int REP_LOW_LOSS = -1;
+	public static final int REP_LOW_LOSS = -3;
 	/** Убийство живого гриба. */
-	public static final int REP_LOSS_LIVING_MUSHROOM_KILL = -3;
+	public static final int REP_LOSS_LIVING_MUSHROOM_KILL = -5;
 
 	/** Рост: разрушение мёртвой листвы. */
-	public static final int REP_GAIN_BREAK_DEAD_LEAVES = 2;
+	public static final int REP_GAIN_BREAK_DEAD_LEAVES = 4;
 	/** Рост: костная мука по бревну. */
-	public static final int REP_GAIN_BONEMEAL_LOG = 2;
+	public static final int REP_GAIN_BONEMEAL_LOG = 5;
 	/** Рост: бутылка воды по бревну. */
-	public static final int REP_GAIN_WATER_LOG = 2;
+	public static final int REP_GAIN_WATER_LOG = 5;
 	/** Рост: курица очистила землю от червей. */
-	public static final int REP_GAIN_WORMS_CLEANED = 3;
+	public static final int REP_GAIN_WORMS_CLEANED = 8;
 
 	// --- Плоды ---
 	/** Длина майнкрафт-суток в тиках. Плод зреет 5 дней. */

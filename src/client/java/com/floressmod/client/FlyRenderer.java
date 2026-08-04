@@ -4,10 +4,9 @@ import com.floressmod.FloressMod;
 import com.floressmod.entity.FlyEntity;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Identifier;
 
-public class FlyRenderer extends MobEntityRenderer<FlyEntity, LivingEntityRenderState, FlyModel> {
+public class FlyRenderer extends MobEntityRenderer<FlyEntity, FlyRenderState, FlyModel> {
 	private static final Identifier TEXTURE = Identifier.of(FloressMod.MOD_ID, "textures/entity/fly.png");
 
 	public FlyRenderer(EntityRendererFactory.Context context) {
@@ -15,12 +14,18 @@ public class FlyRenderer extends MobEntityRenderer<FlyEntity, LivingEntityRender
 	}
 
 	@Override
-	public LivingEntityRenderState createRenderState() {
-		return new LivingEntityRenderState();
+	public FlyRenderState createRenderState() {
+		return new FlyRenderState();
 	}
 
 	@Override
-	public Identifier getTexture(LivingEntityRenderState state) {
+	public void updateRenderState(FlyEntity entity, FlyRenderState state, float tickDelta) {
+		super.updateRenderState(entity, state, tickDelta);
+		state.onGround = entity.isOnGround();
+	}
+
+	@Override
+	public Identifier getTexture(FlyRenderState state) {
 		return TEXTURE;
 	}
 }

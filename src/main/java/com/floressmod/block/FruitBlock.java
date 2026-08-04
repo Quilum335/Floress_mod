@@ -64,10 +64,22 @@ public class FruitBlock extends Block {
 	}
 
 	@Override
+	public BlockState getPlacementState(net.minecraft.item.ItemPlacementContext ctx) {
+		// из предмета ставится сразу спелый плод случайного типа
+		return this.getDefaultState()
+				.with(TYPE, FruitType.random(ctx.getWorld().getRandom()))
+				.with(AGE, RIPE_AGE);
+	}
+
+	@Override
 	protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
 		super.onBlockAdded(state, world, pos, oldState, notify);
-		if (!world.isClient && state.get(AGE) < RIPE_AGE) {
-			world.scheduleBlockTick(pos, this, FloressConfig.FRUIT_DAY_TICKS);
+		if (!world.isClient) {
+			if (state.get(AGE) < RIPE_AGE) {
+				world.scheduleBlockTick(pos, this, FloressConfig.FRUIT_DAY_TICKS);
+			} else {
+				world.scheduleBlockTick(pos, this, 20 + world.random.nextInt(181));
+			}
 		}
 	}
 

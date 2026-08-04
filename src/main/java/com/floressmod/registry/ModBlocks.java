@@ -7,6 +7,7 @@ import com.floressmod.block.FloressLeavesBlock;
 import com.floressmod.block.FruitBlock;
 import com.floressmod.block.LyingBrickBlock;
 import com.floressmod.block.PluschBlock;
+import com.floressmod.block.ShelfMushroomBlock;
 import com.floressmod.block.SoftTurfBlock;
 import com.floressmod.block.WormyDirtBlock;
 import net.minecraft.block.AbstractBlock;
@@ -58,7 +59,16 @@ public final class ModBlocks {
 	public static final Block AMANITA = register("amanita", AmanitaBlock::new,
 			AbstractBlock.Settings.copy(Blocks.RED_MUSHROOM));
 
-	/** Плод дерева — зреет 5 дней, падает, вызывает ивент. Предметной формы нет. */
+	/** Трутовик — крепится к стенам/потолку, упругий, костная мука увеличивает. */
+	public static final Block SHELF_MUSHROOM = register("shelf_mushroom", ShelfMushroomBlock::new,
+			AbstractBlock.Settings.create()
+					.mapColor(MapColor.BROWN)
+					.sounds(BlockSoundGroup.FUNGUS)
+					.breakInstantly()
+					.nonOpaque()
+					.pistonBehavior(PistonBehavior.DESTROY));
+
+	/** Плод дерева — зреет 5 дней, падает, вызывает ивент. Предмет ставит спелый плод случайного типа. */
 	public static final Block FRUIT = register("fruit", FruitBlock::new,
 			AbstractBlock.Settings.create()
 					.mapColor(MapColor.GREEN)

@@ -1,6 +1,8 @@
 package com.floressmod.registry;
 
 import com.floressmod.FloressMod;
+import com.floressmod.block.FruitBlock;
+import com.floressmod.item.FruitStageBlockItem;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -36,6 +38,23 @@ public final class ModItems {
 	/** Алиас-предмет для ванильного мухомора в горшке — у него своя модель в assets. */
 	public static final Item POTTED_RED_MUSHROOM = registerAliasedBlockItem("potted_red_mushroom", Blocks.POTTED_RED_MUSHROOM);
 
+	/** Плод дерева — ставится под листву спелым, со случайным типом (для тестов/съёмок). */
+	public static final Item FRUIT = registerBlockItem("fruit", ModBlocks.FRUIT);
+
+	/** Плоды трёх стадий роста — для постановки конкретной стадии рукой (тип случайный). */
+	public static final Item FRUIT_STAGE_1 = registerItem("fruit_stage_1",
+			new FruitStageBlockItem(ModBlocks.FRUIT,
+					new Item.Settings().registryKey(itemKey("fruit_stage_1")), 0));
+	public static final Item FRUIT_STAGE_2 = registerItem("fruit_stage_2",
+			new FruitStageBlockItem(ModBlocks.FRUIT,
+					new Item.Settings().registryKey(itemKey("fruit_stage_2")), 2));
+	public static final Item FRUIT_STAGE_3 = registerItem("fruit_stage_3",
+			new FruitStageBlockItem(ModBlocks.FRUIT,
+					new Item.Settings().registryKey(itemKey("fruit_stage_3")), FruitBlock.RIPE_AGE));
+
+	/** Трутовик — крепится на стены и потолок. */
+	public static final Item SHELF_MUSHROOM = registerBlockItem("shelf_mushroom", ModBlocks.SHELF_MUSHROOM);
+
 	public static final Item LIVING_MUSHROOM_SPAWN_EGG = registerItem("living_mushroom_spawn_egg",
 			new SpawnEggItem(ModEntities.LIVING_MUSHROOM,
 					new Item.Settings().registryKey(itemKey("living_mushroom_spawn_egg"))));
@@ -59,6 +78,11 @@ public final class ModItems {
 						entries.add(DEAD_LEAVES);
 						entries.add(AMANITA);
 						entries.add(POTTED_RED_MUSHROOM);
+						entries.add(FRUIT);
+						entries.add(FRUIT_STAGE_1);
+						entries.add(FRUIT_STAGE_2);
+						entries.add(FRUIT_STAGE_3);
+						entries.add(SHELF_MUSHROOM);
 						entries.add(LIVING_MUSHROOM_SPAWN_EGG);
 						entries.add(FLY_SPAWN_EGG);
 					})

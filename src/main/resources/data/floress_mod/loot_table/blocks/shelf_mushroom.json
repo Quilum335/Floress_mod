@@ -1,0 +1,29 @@
+{
+	"type": "minecraft:block",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "floress_mod:shelf_mushroom",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 2.0,
+							"conditions": [
+								{
+									"condition": "minecraft:block_state_property",
+									"block": "floress_mod:shelf_mushroom",
+									"properties": { "age": "1" }
+								}
+							]
+						},
+						{ "function": "minecraft:explosion_decay" }
+					]
+				}
+			]
+		}
+	],
+	"random_sequence": "floress_mod:blocks/shelf_mushroom"
+}

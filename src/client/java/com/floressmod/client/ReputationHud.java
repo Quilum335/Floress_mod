@@ -48,13 +48,12 @@ public final class ReputationHud {
 		context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
 				x, y, 0, 0, BAR_WIDTH, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
 
-		int amount = (int) (Math.abs(reputation) / 100.0 * HALF);
-		if (reputation > 0) {
+		// одна сплошная полоса: заполнение слева направо, -100..100 -> 0..100%
+		// при репутации 0 (старт) полоса заполнена ровно наполовину
+		int amount = (int) ((reputation + 100) / 200.0 * BAR_WIDTH);
+		if (amount > 0) {
 			context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
-					centerX, y, HALF, 25, amount, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
-		} else if (reputation < 0) {
-			context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
-					centerX - amount, y, HALF - amount, 25, amount, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
+					x, y, 0, 25, amount, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
 		}
 
 		String text = String.valueOf(reputation);

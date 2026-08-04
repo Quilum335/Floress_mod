@@ -155,11 +155,18 @@ if ($Mode -eq "geo") {
             }
         }
         $faces = [ordered]@{}
+        # UV в bbmodel — в пикселях текстуры; в ванильной модели — в сетке 0..16
+        $uScale = 16.0 / [double]$bb.resolution.width
+        $vScale = 16.0 / [double]$bb.resolution.height
         foreach ($face in @("north","east","south","west","up","down")) {
             $f = $e.faces.$face
             if (-not $f -or -not $f.uv) { continue }
             $target = if ($faceSwap -and $faceSwap.ContainsKey($face)) { $faceSwap[$face] } else { $face }
-            $faces[$target] = [ordered]@{ uv = @([double]$f.uv[0], [double]$f.uv[1], [double]$f.uv[2], [double]$f.uv[3]); texture = "#0" }
+            $u0 = [double]($f.uv[0]) * $uScale
+            $v0 = [double]($f.uv[1]) * $vScale
+            $u1 = [double]($f.uv[2]) * $uScale
+            $v1 = [double]($f.uv[3]) * $vScale
+            $faces[$target] = [ordered]@{ uv = @($u0, $v0, $u1, $v1); texture = "#0" }
         }
         $el.faces = $faces
         $cubes += $el

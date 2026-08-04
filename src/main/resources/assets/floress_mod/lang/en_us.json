@@ -5,6 +5,9 @@
 
 	"item.floress_mod.worm": "Worm",
 	"item.floress_mod.potted_red_mushroom": "Potted Amanita",
+	"item.floress_mod.fruit_stage_1": "Tree Fruit (Stage 1)",
+	"item.floress_mod.fruit_stage_2": "Tree Fruit (Stage 2)",
+	"item.floress_mod.fruit_stage_3": "Tree Fruit (Stage 3)",
 	"item.floress_mod.living_mushroom_spawn_egg": "Living Mushroom Spawn Egg",
 	"item.floress_mod.fly_spawn_egg": "Fly Spawn Egg",
 
@@ -17,6 +20,7 @@
 	"block.floress_mod.dead_leaves": "Dead Leaves",
 	"block.floress_mod.amanita": "Amanita",
 	"block.floress_mod.fruit": "Tree Fruit",
+	"block.floress_mod.shelf_mushroom": "Shelf Mushroom",
 
 	"entity.floress_mod.living_mushroom": "Living Mushroom",
 	"entity.floress_mod.fly": "Fly"

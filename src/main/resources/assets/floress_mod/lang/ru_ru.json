@@ -3,6 +3,9 @@
 
 	"item.floress_mod.worm": "Червяк",
 	"item.floress_mod.potted_red_mushroom": "Мухомор в горшке",
+	"item.floress_mod.fruit_stage_1": "Плод дерева (1 стадия)",
+	"item.floress_mod.fruit_stage_2": "Плод дерева (2 стадия)",
+	"item.floress_mod.fruit_stage_3": "Плод дерева (3 стадия)",
 	"item.floress_mod.living_mushroom_spawn_egg": "Яйцо призыва живого гриба",
 	"item.floress_mod.fly_spawn_egg": "Яйцо призыва мухи",
 
@@ -15,6 +18,7 @@
 	"block.floress_mod.dead_leaves": "Мёртвая листва",
 	"block.floress_mod.amanita": "Мухомор",
 	"block.floress_mod.fruit": "Плод дерева",
+	"block.floress_mod.shelf_mushroom": "Трутовик",
 
 	"entity.floress_mod.living_mushroom": "Живой гриб",
 	"entity.floress_mod.fly": "Муха"

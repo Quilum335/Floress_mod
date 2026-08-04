@@ -1,213 +1,45 @@
 {
-    "parent":  "minecraft:block/block",
-    "textures":  {
-                     "0":  "floress_mod:block/plod_2",
-                     "particle":  "floress_mod:block/plod_2"
-                 },
-    "elements":  [
-                     {
-                         "from":  [
-                                      -4,
-                                      6,
-                                      -4
-                                  ],
-                         "to":  [
-                                    4,
-                                    15,
-                                    4
-                                ],
-                         "faces":  {
-                                       "north":  {
-                                                     "uv":  [
-                                                                8,
-                                                                12,
-                                                                16,
-                                                                21
-                                                            ],
-                                                     "texture":  "#0"
-                                                 },
-                                       "east":  {
-                                                    "uv":  [
-                                                               16,
-                                                               12,
-                                                               8,
-                                                               21
-                                                           ],
-                                                    "texture":  "#0"
-                                                },
-                                       "south":  {
-                                                     "uv":  [
-                                                                8,
-                                                                12,
-                                                                16,
-                                                                21
-                                                            ],
-                                                     "texture":  "#0"
-                                                 },
-                                       "west":  {
-                                                    "uv":  [
-                                                               16,
-                                                               12,
-                                                               8,
-                                                               21
-                                                           ],
-                                                    "texture":  "#0"
-                                                },
-                                       "up":  {
-                                                  "uv":  [
-                                                             0,
-                                                             0,
-                                                             8,
-                                                             8
-                                                         ],
-                                                  "texture":  "#0"
-                                              },
-                                       "down":  {
-                                                    "uv":  [
-                                                               0,
-                                                               8,
-                                                               8,
-                                                               16
-                                                           ],
-                                                    "texture":  "#0"
-                                                }
-                                   }
-                     },
-                     {
-                         "from":  [
-                                      -3,
-                                      15,
-                                      -3
-                                  ],
-                         "to":  [
-                                    3,
-                                    16,
-                                    3
-                                ],
-                         "faces":  {
-                                       "north":  {
-                                                     "uv":  [
-                                                                14,
-                                                                0,
-                                                                20,
-                                                                1
-                                                            ],
-                                                     "texture":  "#0"
-                                                 },
-                                       "east":  {
-                                                    "uv":  [
-                                                               14,
-                                                               1,
-                                                               20,
-                                                               2
-                                                           ],
-                                                    "texture":  "#0"
-                                                },
-                                       "south":  {
-                                                     "uv":  [
-                                                                14,
-                                                                2,
-                                                                20,
-                                                                3
-                                                            ],
-                                                     "texture":  "#0"
-                                                 },
-                                       "west":  {
-                                                    "uv":  [
-                                                               14,
-                                                               3,
-                                                               20,
-                                                               4
-                                                           ],
-                                                    "texture":  "#0"
-                                                },
-                                       "up":  {
-                                                  "uv":  [
-                                                             14,
-                                                             6,
-                                                             8,
-                                                             0
-                                                         ],
-                                                  "texture":  "#0"
-                                              },
-                                       "down":  {
-                                                    "uv":  [
-                                                               14,
-                                                               6,
-                                                               8,
-                                                               12
-                                                           ],
-                                                    "texture":  "#0"
-                                                }
-                                   }
-                     },
-                     {
-                         "from":  [
-                                      -3,
-                                      5,
-                                      -3
-                                  ],
-                         "to":  [
-                                    3,
-                                    6,
-                                    3
-                                ],
-                         "faces":  {
-                                       "north":  {
-                                                     "uv":  [
-                                                                14,
-                                                                0,
-                                                                20,
-                                                                1
-                                                            ],
-                                                     "texture":  "#0"
-                                                 },
-                                       "east":  {
-                                                    "uv":  [
-                                                               14,
-                                                               1,
-                                                               20,
-                                                               2
-                                                           ],
-                                                    "texture":  "#0"
-                                                },
-                                       "south":  {
-                                                     "uv":  [
-                                                                14,
-                                                                2,
-                                                                20,
-                                                                3
-                                                            ],
-                                                     "texture":  "#0"
-                                                 },
-                                       "west":  {
-                                                    "uv":  [
-                                                               14,
-                                                               3,
-                                                               20,
-                                                               4
-                                                           ],
-                                                    "texture":  "#0"
-                                                },
-                                       "up":  {
-                                                  "uv":  [
-                                                             14,
-                                                             6,
-                                                             8,
-                                                             0
-                                                         ],
-                                                  "texture":  "#0"
-                                              },
-                                       "down":  {
-                                                    "uv":  [
-                                                               14,
-                                                               6,
-                                                               8,
-                                                               12
-                                                           ],
-                                                    "texture":  "#0"
-                                                }
-                                   }
-                     }
-                 ]
+    "parent": "minecraft:block/block",
+    "textures": {
+        "0": "floress_mod:block/plod_2",
+        "particle": "floress_mod:block/plod_2"
+    },
+    "elements": [
+        {
+            "from": [4, 6, 4],
+            "to": [12, 15, 12],
+            "faces": {
+                "north": { "uv": [4, 6, 8, 10.5], "texture": "#0" },
+                "east": { "uv": [8, 6, 4, 10.5], "texture": "#0" },
+                "south": { "uv": [4, 6, 8, 10.5], "texture": "#0" },
+                "west": { "uv": [8, 6, 4, 10.5], "texture": "#0" },
+                "up": { "uv": [0, 0, 4, 4], "texture": "#0" },
+                "down": { "uv": [0, 4, 4, 8], "texture": "#0" }
+            }
+        },
+        {
+            "from": [5, 15, 5],
+            "to": [11, 16, 11],
+            "faces": {
+                "north": { "uv": [7, 0, 10, 0.5], "texture": "#0" },
+                "east": { "uv": [7, 0.5, 10, 1], "texture": "#0" },
+                "south": { "uv": [7, 1, 10, 1.5], "texture": "#0" },
+                "west": { "uv": [7, 1.5, 10, 2], "texture": "#0" },
+                "up": { "uv": [7, 3, 4, 0], "texture": "#0" },
+                "down": { "uv": [7, 3, 4, 6], "texture": "#0" }
+            }
+        },
+        {
+            "from": [5, 5, 5],
+            "to": [11, 6, 11],
+            "faces": {
+                "north": { "uv": [7, 0, 10, 0.5], "texture": "#0" },
+                "east": { "uv": [7, 0.5, 10, 1], "texture": "#0" },
+                "south": { "uv": [7, 1, 10, 1.5], "texture": "#0" },
+                "west": { "uv": [7, 1.5, 10, 2], "texture": "#0" },
+                "up": { "uv": [7, 3, 4, 0], "texture": "#0" },
+                "down": { "uv": [7, 3, 4, 6], "texture": "#0" }
+            }
+        }
+    ]
 }

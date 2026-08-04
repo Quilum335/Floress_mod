@@ -42,16 +42,20 @@ public class LivingMushroomEntity extends HostileEntity implements GeoEntity {
 
 	private PlayState movementPredicate(AnimationState<LivingMushroomEntity> state) {
 		if (state.isMoving()) {
+			// бег — при погоне за целью, ходьба — при блуждании
 			return state.setAndContinue(RawAnimation.begin()
-					.thenLoop(this.getVelocity().horizontalLengthSquared() > 0.04 ? "run" : "walk"));
+					.thenLoop(this.getTarget() != null ? "run" : "walk"));
 		}
 		return state.setAndContinue(RawAnimation.begin().thenLoop("idle"));
 	}
 
 	private PlayState attackPredicate(AnimationState<LivingMushroomEntity> state) {
 		if (this.handSwinging) {
-			state.getController().forceAnimationReset();
-			return state.setAndContinue(RawAnimation.begin().thenPlay("hit"));
+			if (state.getController().getAnimationState() == AnimationController.State.STOPPED) {
+				state.getController().forceAnimationReset();
+				return state.setAndContinue(RawAnimation.begin().thenPlay("hit"));
+			}
+			return PlayState.CONTINUE;
 		}
 		return PlayState.STOP;
 	}
