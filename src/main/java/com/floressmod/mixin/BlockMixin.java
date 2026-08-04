@@ -38,17 +38,7 @@ public abstract class BlockMixin {
 		if (entity.bypassesLandingEffects()) {
 			return;
 		}
-		if (!MushroomBounce.trySlimeBounce(entity)) {
-			return;
-		}
+		MushroomBounce.applyFallBounce(entity);
 		ci.cancel();
-	}
-
-	@Inject(method = "onSteppedOn", at = @At("HEAD"))
-	private void floress$mushroomSteppedOn(World world, BlockPos pos, BlockState state, Entity entity, CallbackInfo ci) {
-		if (!MushroomBounce.isBounceBlock(state)) {
-			return;
-		}
-		MushroomBounce.onSteppedOn(entity);
 	}
 }
