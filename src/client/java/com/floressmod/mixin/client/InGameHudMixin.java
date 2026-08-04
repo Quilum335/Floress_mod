@@ -4,7 +4,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Constant;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
@@ -13,6 +15,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(InGameHud.class)
 public abstract class InGameHudMixin {
+	private static final int FLORESS_STATUS_BARS_RAISE = 8;
+
+	@ModifyConstant(method = "renderStatusBars", constant = @Constant(intValue = 39))
+	private int floress$raiseHealthAndFood(int originalOffset) {
+		return originalOffset + FLORESS_STATUS_BARS_RAISE;
+	}
+
+	@ModifyConstant(method = "renderMountHealth", constant = @Constant(intValue = 39))
+	private int floress$raiseMountHealth(int originalOffset) {
+		return originalOffset + FLORESS_STATUS_BARS_RAISE;
+	}
+
 	@Inject(method = "renderExperienceBar", at = @At("HEAD"), cancellable = true)
 	private void floress$hideExperienceBar(DrawContext context, int x, CallbackInfo ci) {
 		ci.cancel();

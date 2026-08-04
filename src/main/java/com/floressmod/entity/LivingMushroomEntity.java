@@ -1,6 +1,7 @@
 package com.floressmod.entity;
 
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.ActiveTargetGoal;
 import net.minecraft.entity.ai.goal.LookAroundGoal;
 import net.minecraft.entity.ai.goal.LookAtEntityGoal;
@@ -10,6 +11,9 @@ import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WanderAroundFarGoal;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
@@ -28,6 +32,10 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  * Модель и анимации (idle/walk/run/hit) — GeckoLib, авторские из gribg.bbmodel.
  */
 public class LivingMushroomEntity extends HostileEntity implements GeoEntity {
+	/** Клиентская копия наличия цели: getTarget() на клиенте всегда null, поэтому бег заводим через трекер. */
+	private static final TrackedData<Boolean> HAS_TARGET =
+			DataTracker.registerData(LivingMushroomEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
 	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
 	public LivingMushroomEntity(EntityType<? extends HostileEntity> entityType, World world) {
@@ -35,29 +43,33 @@ public class LivingMushroomEntity extends HostileEntity implements GeoEntity {
 	}
 
 	@Override
-	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-		controllers.add(new AnimationController<>(this, "movement", 5, this::movementPredicate));
-		controllers.add(new AnimationController<>(this, "attack", 0, this::attackPredicate));
+	protected void initDataTracker(DataTracker.Builder builder) {
+		super.initDataTracker(builder);
+		builder.add(HAS_TARGET, false);
 	}
 
-	private PlayState movementPredicate(AnimationState<LivingMushroomEntity> state) {
+	@Override
+	public void setTarget(LivingEntity target) {
+		super.setTarget(target);
+		this.dataTracker.set(HAS_TARGET, target != null);
+	}
+
+	@Override
+	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+		// Один контроллер не даёт анимациям движения и удара одновременно перезаписывать одни и те же кости.
+		controllers.add(new AnimationController<>(this, "main", 2, this::animationPredicate));
+	}
+
+	private PlayState animationPredicate(AnimationState<LivingMushroomEntity> state) {
+		if (this.handSwinging) {
+			return state.setAndContinue(RawAnimation.begin().thenPlay("hit"));
+		}
 		if (state.isMoving()) {
 			// бег — при погоне за целью, ходьба — при блуждании
 			return state.setAndContinue(RawAnimation.begin()
-					.thenLoop(this.getTarget() != null ? "run" : "walk"));
+					.thenLoop(this.dataTracker.get(HAS_TARGET) ? "run" : "walk"));
 		}
 		return state.setAndContinue(RawAnimation.begin().thenLoop("idle"));
-	}
-
-	private PlayState attackPredicate(AnimationState<LivingMushroomEntity> state) {
-		if (this.handSwinging) {
-			if (state.getController().getAnimationState() == AnimationController.State.STOPPED) {
-				state.getController().forceAnimationReset();
-				return state.setAndContinue(RawAnimation.begin().thenPlay("hit"));
-			}
-			return PlayState.CONTINUE;
-		}
-		return PlayState.STOP;
 	}
 
 	@Override

@@ -95,6 +95,16 @@ public final class FruitLandEffects {
 
 	/** 3) Р‘РѕРјР±Р° вЂ” Р»РѕРјР°РµС‚ Р±Р»РѕРєРё РљР РћРњР• РїСЂРёСЂРѕРґРЅС‹С…, РјСѓС…РѕРјРѕСЂС‹ СЃС‚Р°РЅРѕРІСЏС‚СЃСЏ Р¶РёРІС‹РјРё. */
 	private static void explode(ServerWorld world, BlockPos pos) {
+		// мухоморы собираем ДО взрыва: если защита тега даст сбой, после взрыва останется лишь воздух
+		int r = FloressConfig.FRUIT_EXPLOSION_AMANITA_RADIUS;
+		java.util.List<BlockPos> amanitas = new java.util.ArrayList<>();
+		for (BlockPos check : BlockPos.iterate(pos.add(-r, -r, -r), pos.add(r, r, r))) {
+			if (amanitas.size() >= 12) break;
+			if (isRedAmanita(world.getBlockState(check))) {
+				amanitas.add(check.toImmutable());
+			}
+		}
+
 		ExplosionBehavior behavior = new ExplosionBehavior() {
 			@Override
 			public boolean canDestroyBlock(Explosion explosion, net.minecraft.world.BlockView view, BlockPos blockPos, BlockState state, float power) {
@@ -106,19 +116,15 @@ public final class FruitLandEffects {
 				FloressConfig.FRUIT_EXPLOSION_POWER, false, World.ExplosionSourceType.BLOCK);
 
 		// РјСѓС…РѕРјРѕСЂС‹ РІ СЂР°РґРёСѓСЃРµ РїСЂРµРІСЂР°С‰Р°СЋС‚СЃСЏ РІ Р–РР’Р«РҐ РіСЂРёР±РѕРІ
-		int r = FloressConfig.FRUIT_EXPLOSION_AMANITA_RADIUS;
-		int converted = 0;
-		for (BlockPos check : BlockPos.iterate(pos.add(-r, -r, -r), pos.add(r, r, r))) {
-			if (converted >= 12) break;
-			if (world.getBlockState(check).getBlock() instanceof AmanitaBlock) {
+		for (BlockPos check : amanitas) {
+			if (isRedAmanita(world.getBlockState(check))) {
 				world.removeBlock(check, false);
-				LivingMushroomEntity mushroom = ModEntities.LIVING_MUSHROOM.create(world, SpawnReason.EVENT);
-				if (mushroom != null) {
-					mushroom.refreshPositionAndAngles(check.getX() + 0.5, check.getY(), check.getZ() + 0.5,
-							world.random.nextFloat() * 360.0f, 0.0f);
-					world.spawnEntity(mushroom);
-					converted++;
-				}
+			}
+			LivingMushroomEntity mushroom = ModEntities.LIVING_MUSHROOM.create(world, SpawnReason.EVENT);
+			if (mushroom != null) {
+				mushroom.refreshPositionAndAngles(check.getX() + 0.5, check.getY(), check.getZ() + 0.5,
+						world.random.nextFloat() * 360.0f, 0.0f);
+				world.spawnEntity(mushroom);
 			}
 		}
 	}
@@ -136,6 +142,11 @@ public final class FruitLandEffects {
 					world.random.nextFloat() * 360.0f, 0.0f);
 			world.spawnEntity(rabbit);
 		}
+	}
+
+	/** И модовый мухомор, и обычный ванильный красный гриб должны оживать от взрыва плода. */
+	private static boolean isRedAmanita(BlockState state) {
+		return state.isOf(Blocks.RED_MUSHROOM) || state.getBlock() instanceof AmanitaBlock;
 	}
 
 	/** 5) Р—РѕРјР±Рё РІ Р¶РµР»РµР·РЅРѕР№ Р±СЂРѕРЅРµ (РЅРµ С„СѓР» СЃРµС‚) + Р¶РёРІС‹Рµ РіСЂРёР±С‹. */

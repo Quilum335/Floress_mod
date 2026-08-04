@@ -114,7 +114,7 @@ public class FlyEntity extends HostileEntity {
 						target.getX(),
 						target.getY() + target.getStandingEyeHeight() * 0.5,
 						target.getZ(),
-						1.4);
+						0.5);
 				this.cooldown = 12 + this.fly.getRandom().nextInt(12);
 			}
 			if (this.fly.squaredDistanceTo(target) < 2.0 && this.fly.getWorld() instanceof ServerWorld serverWorld) {
@@ -148,7 +148,7 @@ public class FlyEntity extends HostileEntity {
 			double y = this.fly.getY() + this.fly.getRandom().nextInt(7) - 2;
 			double z = this.fly.getZ() + this.fly.getRandom().nextInt(13) - 6;
 			if (this.fly.getWorld().isAir(net.minecraft.util.math.BlockPos.ofFloored(x, y, z))) {
-				this.fly.getMoveControl().moveTo(x, y, z, 0.7);
+				this.fly.getMoveControl().moveTo(x, y, z, 0.3);
 			}
 		}
 	}

@@ -16,24 +16,13 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.animation.AnimatableManager;
-import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.AnimationState;
-import software.bernie.geckolib.animation.PlayState;
-import software.bernie.geckolib.animation.RawAnimation;
-import software.bernie.geckolib.util.GeckoLibUtil;
-
 import java.util.Optional;
 
 /**
- * Созревший плод, три фазы (авторские анимации из plod.json):
- * RELEASE — висит и «отрывается» (трясётся, без гравитации),
- * FALL — падает (гравитация),
- * LAND — приземлился: срабатывает эффект типа и играется анимация разбития.
+ * Созревший плод с тремя фазами: отрыв, падение и приземление.
+ * На клиенте всегда рисуется исходной baked-моделью третьей стадии, поэтому форма и UV не меняются.
  */
-public class FallingFruitEntity extends Entity implements GeoEntity {
+public class FallingFruitEntity extends Entity {
 	public static final int PHASE_RELEASE = 0;
 	public static final int PHASE_FALL = 1;
 	public static final int PHASE_LAND = 2;
@@ -46,10 +35,7 @@ public class FallingFruitEntity extends Entity implements GeoEntity {
 	private static final TrackedData<Integer> PHASE =
 			DataTracker.registerData(FallingFruitEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-	private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
-
 	private int phaseTicks;
-	private int releaseJitter;
 
 	public FallingFruitEntity(EntityType<?> type, World world) {
 		super(type, world);
@@ -58,8 +44,7 @@ public class FallingFruitEntity extends Entity implements GeoEntity {
 	public static void spawn(ServerWorld world, BlockPos pos, BlockState fruitState) {
 		FallingFruitEntity entity = new FallingFruitEntity(ModEntities.FALLING_FRUIT, world);
 		entity.setFruitState(fruitState);
-		entity.releaseJitter = world.random.nextInt(41);
-		entity.setPosition(pos.getX() + 0.5, pos.getY() + 0.2, pos.getZ() + 0.5);
+		entity.setPosition(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
 		entity.setNoGravity(true);
 		world.spawnEntity(entity);
 	}
@@ -76,6 +61,14 @@ public class FallingFruitEntity extends Entity implements GeoEntity {
 		return this.dataTracker.get(PHASE);
 	}
 
+	public int getAnimationPhase() {
+		return this.getPhase();
+	}
+
+	public int getAnimationPhaseTicks() {
+		return this.phaseTicks;
+	}
+
 	private void setPhase(int phase) {
 		this.dataTracker.set(PHASE, phase);
 		this.phaseTicks = 0;
@@ -88,21 +81,11 @@ public class FallingFruitEntity extends Entity implements GeoEntity {
 	}
 
 	@Override
-	public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-		controllers.add(new AnimationController<>(this, "main", 0, this::predicate));
-	}
-
-	private PlayState predicate(AnimationState<FallingFruitEntity> state) {
-		return switch (this.getPhase()) {
-			case PHASE_RELEASE -> state.setAndContinue(RawAnimation.begin().thenPlay("release"));
-			case PHASE_LAND -> state.setAndContinue(RawAnimation.begin().thenPlay("land"));
-			default -> state.setAndContinue(RawAnimation.begin().thenLoop("fall"));
-		};
-	}
-
-	@Override
-	public AnimatableInstanceCache getAnimatableInstanceCache() {
-		return this.cache;
+	public void onTrackedDataSet(TrackedData<?> data) {
+		super.onTrackedDataSet(data);
+		if (PHASE.equals(data)) {
+			this.phaseTicks = 0;
+		}
 	}
 
 	@Override
@@ -123,9 +106,9 @@ public class FallingFruitEntity extends Entity implements GeoEntity {
 	}
 
 	private void tickRelease() {
-		// висим на месте и трясёмся (анимация release), потом срываемся вниз
+		// Коротко сохраняем исходную форму на месте, затем срываемся вниз.
 		this.setVelocity(net.minecraft.util.math.Vec3d.ZERO);
-		if (!this.getWorld().isClient && this.phaseTicks >= RELEASE_TICKS + this.releaseJitter) {
+		if (!this.getWorld().isClient && this.phaseTicks >= RELEASE_TICKS) {
 			this.setNoGravity(false);
 			this.setPhase(PHASE_FALL);
 		}
@@ -171,7 +154,6 @@ public class FallingFruitEntity extends Entity implements GeoEntity {
 		}
 		this.setPhase(nbt.getInt("Phase"));
 		this.phaseTicks = nbt.getInt("PhaseTicks");
-		this.releaseJitter = nbt.getInt("ReleaseJitter");
 	}
 
 	@Override
@@ -179,7 +161,6 @@ public class FallingFruitEntity extends Entity implements GeoEntity {
 		this.getFruitState().ifPresent(state -> nbt.put("FruitState", NbtHelper.fromBlockState(state)));
 		nbt.putInt("Phase", this.getPhase());
 		nbt.putInt("PhaseTicks", this.phaseTicks);
-		nbt.putInt("ReleaseJitter", this.releaseJitter);
 	}
 
 	@Override

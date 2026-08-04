@@ -55,9 +55,5 @@ public final class ReputationHud {
 			context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
 					x, y, 0, 25, amount, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
 		}
-
-		String text = String.valueOf(reputation);
-		int color = reputation >= 0 ? 0xA0FFA0 : 0xFFA0A0;
-		context.drawTextWithShadow(client.textRenderer, text, centerX + 11, y + 9, color);
 	}
 }

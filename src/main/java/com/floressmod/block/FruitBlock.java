@@ -91,9 +91,9 @@ public class FruitBlock extends Block {
 			world.setBlockState(pos, state.with(AGE, age + 1));
 			world.scheduleBlockTick(pos, this, FloressConfig.FRUIT_DAY_TICKS);
 		} else if (age == RIPE_AGE) {
-			// созрел: случайный разброс в несколько секунд, чтобы плоды не падали разом
+			// созрел: висит ещё полные сутки (итого ровно 5 дней от завязи) + разброс, чтобы не падали разом
 			world.setBlockState(pos, state.with(AGE, RIPE_AGE + 1));
-			world.scheduleBlockTick(pos, this, 20 + random.nextInt(181)); // 1–10 секунд
+			world.scheduleBlockTick(pos, this, FloressConfig.FRUIT_DAY_TICKS + 20 + random.nextInt(181));
 		} else {
 			// время падать
 			if (world.getBlockState(pos.down()).isAir()) {

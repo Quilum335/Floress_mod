@@ -9,7 +9,6 @@
 		"FlowerPotBlockMixin",
 		"FlowableFluidMixin",
 		"GlassBottleItemMixin",
-		"LeavesBlockMixin",
 		"LivingEntityMixin",
 		"MobSpawnerLogicMixin",
 		"MushroomPlantBlockMixin"

@@ -47,9 +47,19 @@ foreach ($e in $bb.elements) { $elements[$e.uuid] = $e }
 
 $shift = @(0.0, 0.0, 0.0)
 if ($EntitySpace) {
-    $minY = 999.0
-    foreach ($e in $bb.elements) { if ($e.from[1] -lt $minY) { $minY = [double]$e.from[1] } }
-    $shift = @(-8.0, -$minY, -8.0)
+    $minX = 999.0; $minY = 999.0; $minZ = 999.0
+    $maxX = -999.0; $maxZ = -999.0
+    foreach ($e in $bb.elements) {
+        if ($e.from[0] -lt $minX) { $minX = [double]$e.from[0] }
+        if ($e.from[1] -lt $minY) { $minY = [double]$e.from[1] }
+        if ($e.from[2] -lt $minZ) { $minZ = [double]$e.from[2] }
+        if ($e.to[0] -gt $maxX) { $maxX = [double]$e.to[0] }
+        if ($e.to[2] -gt $maxZ) { $maxZ = [double]$e.to[2] }
+    }
+    # Центруем реальные границы модели: это работает и для 0..16, и для уже центрированных bbmodel.
+    $centerX = ($minX + $maxX) / 2.0
+    $centerZ = ($minZ + $maxZ) / 2.0
+    $shift = @(-$centerX, -$minY, -$centerZ)
 }
 function Shift-Vec($v) {
     return Vec3 ($v[0] + $shift[0]) ($v[1] + $shift[1]) ($v[2] + $shift[2])

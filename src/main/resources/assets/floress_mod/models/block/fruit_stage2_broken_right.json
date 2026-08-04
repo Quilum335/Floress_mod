@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "0": "floress_mod:block/plod_3",
+    "particle": "floress_mod:block/plod_3"
+  },
+  "elements": [
+    {
+      "from": [8, 0, 4], "to": [8, 6, 12],
+      "faces": {
+        "east": {"uv": [6.25, 7.75, 7.75, 5.75], "texture": "#0", "rotation": 90},
+        "west": {"uv": [6.25, 5.75, 7.75, 7.75], "texture": "#0", "rotation": 90}
+      }
+    },
+    {
+      "from": [4, 3, 8], "to": [12, 5, 12],
+      "faces": {
+        "north": {"uv": [2.5, 6, 4.5, 6.5], "texture": "#0"},
+        "east": {"uv": [7.75, 7.25, 8.75, 7.75], "texture": "#0"},
+        "south": {"uv": [2.5, 6.5, 4.5, 7], "texture": "#0"},
+        "west": {"uv": [0, 8, 1, 8.5], "texture": "#0"},
+        "up": {"uv": [4.5, 8, 2.5, 7], "texture": "#0"},
+        "down": {"uv": [3.25, 1, 1.25, 2], "texture": "#0"}
+      }
+    },
+    {
+      "from": [5, 15, 5], "to": [8, 16, 11],
+      "faces": {
+        "north": {"uv": [1.75, 8, 2.5, 8.25], "texture": "#0"},
+        "east": {"uv": [7.5, 2, 9, 2.25], "texture": "#0"},
+        "south": {"uv": [2.5, 8, 3.25, 8.25], "texture": "#0"},
+        "west": {"uv": [7.5, 2.25, 9, 2.5], "texture": "#0"},
+        "up": {"uv": [8.5, 7.25, 7.75, 5.75], "texture": "#0"},
+        "down": {"uv": [6, 7.75, 4.5, 9.25], "texture": "#0"}
+      }
+    },
+    {
+      "from": [3, 4, 3], "to": [8, 15, 13],
+      "faces": {
+        "north": {"uv": [3.75, 0, 5, 2.75], "texture": "#0"},
+        "east": {"uv": [3.75, 2.75, 1.25, 5.5], "texture": "#0"},
+        "south": {"uv": [3.75, 2.75, 5, 5.5], "texture": "#0"},
+        "west": {"uv": [5, 0, 7.5, 2.75], "texture": "#0"},
+        "up": {"uv": [1.25, 8, 0, 5.5], "texture": "#0"},
+        "down": {"uv": [5, 0, 3.75, 2.5], "texture": "#0"}
+      }
+    }
+  ]
+}

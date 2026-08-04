@@ -13,26 +13,24 @@ public final class FloressConfig {
 	public static final int REP_DEFAULT = 0;
 
 	/** СИЛЬНАЯ потеря: брёвна, листва, ядовитый плющ, свисающие корни. */
-	public static final int REP_HIGH_LOSS = -10;
+	public static final int REP_HIGH_LOSS = -25;
 	/** НЕБОЛЬШАЯ потеря: дёрн, трава, морская трава, грибы. */
-	public static final int REP_LOW_LOSS = -3;
+	public static final int REP_LOW_LOSS = -7;
 	/** Убийство живого гриба. */
-	public static final int REP_LOSS_LIVING_MUSHROOM_KILL = -5;
+	public static final int REP_LOSS_LIVING_MUSHROOM_KILL = -12;
 
 	/** Рост: разрушение мёртвой листвы. */
-	public static final int REP_GAIN_BREAK_DEAD_LEAVES = 4;
+	public static final int REP_GAIN_BREAK_DEAD_LEAVES = 20;
 	/** Рост: костная мука по бревну. */
-	public static final int REP_GAIN_BONEMEAL_LOG = 5;
+	public static final int REP_GAIN_BONEMEAL_LOG = 24;
 	/** Рост: бутылка воды по бревну. */
-	public static final int REP_GAIN_WATER_LOG = 5;
+	public static final int REP_GAIN_WATER_LOG = 24;
 	/** Рост: курица очистила землю от червей. */
-	public static final int REP_GAIN_WORMS_CLEANED = 8;
+	public static final int REP_GAIN_WORMS_CLEANED = 36;
 
 	// --- Плоды ---
 	/** Длина майнкрафт-суток в тиках. Плод зреет 5 дней. */
 	public static final int FRUIT_DAY_TICKS = 24000;
-	/** Шанс появления плода при случайном тике листвы рядом с бревном. */
-	public static final float FRUIT_GROW_CHANCE = 0.03f;
 	/** Радиус взрыва плода-бомбы. */
 	public static final float FRUIT_EXPLOSION_POWER = 2.0f;
 	/** Радиус превращения мухоморов в живых грибов после взрыва. */
