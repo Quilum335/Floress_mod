@@ -7,15 +7,8 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderTickCounter;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 
-/**
- * Шкала репутации дерева — текстура hud_rep.png на месте полоски опыта
- * (сама полоска опыта и число уровня скрыты InGameHudMixin; сам опыт
- * и его получение остаются ванильными).
- * Текстура 184x50: верхняя половина (v 0-24) — фон с маской над полосой,
- * нижняя (v 25-49) — заполнение. Полоса внутри виджета на y 16-24.
- * Шкала -100..100, изначально посередине: рост заполняет вправо, падение — влево.
- */
 public final class ReputationHud {
 	private static final Identifier BAR_TEXTURE = Identifier.of(FloressMod.MOD_ID, "textures/gui/hud_rep.png");
 
@@ -24,8 +17,12 @@ public final class ReputationHud {
 	private static final int TEXTURE_HEIGHT = 50;
 	private static final int BAR_TOP_IN_WIDGET = 16;
 	private static final int HALF = BAR_WIDTH / 2;
+	private static final float ANIM_SPEED = 8.0F;
 
-	private ReputationHud() {}
+	private static Float displayed = null;
+
+	private ReputationHud() {
+	}
 
 	public static void register() {
 		HudRenderCallback.EVENT.register(ReputationHud::render);
@@ -34,26 +31,40 @@ public final class ReputationHud {
 	private static void render(DrawContext context, RenderTickCounter tickCounter) {
 		MinecraftClient client = MinecraftClient.getInstance();
 		if (client.player == null || client.interactionManager == null) {
+			displayed = null;
 			return;
 		}
 		if (!client.interactionManager.hasStatusBars()) {
-			return; // креатив/наблюдатель — без шкалы
+			return;
 		}
-		int reputation = ClientReputation.get();
 
-		int centerX = context.getScaledWindowWidth() / 2;
-		int x = centerX - HALF;
-		int y = context.getScaledWindowHeight() - 33 - BAR_TOP_IN_WIDGET; // полоса — на месте полоски опыта
+		float target = ClientReputation.get();
+		if (displayed == null) {
+			displayed = target;
+		} else {
+			float dt = tickCounter.getLastFrameDuration() / 20.0F;
+			float alpha = 1.0F - (float) Math.exp(-ANIM_SPEED * dt);
+			displayed = MathHelper.lerp(alpha, displayed, target);
+		}
+
+		int x = context.getScaledWindowWidth() / 2 - HALF;
+		int y = context.getScaledWindowHeight() - 33 - BAR_TOP_IN_WIDGET;
 
 		context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
 				x, y, 0, 0, BAR_WIDTH, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
 
-		// одна сплошная полоса: заполнение слева направо, -100..100 -> 0..100%
-		// при репутации 0 (старт) полоса заполнена ровно наполовину
-		int amount = (int) ((reputation + 100) / 200.0 * BAR_WIDTH);
-		if (amount > 0) {
+		int extent = Math.round(Math.abs(displayed) / 100.0F * HALF);
+		extent = MathHelper.clamp(extent, 0, HALF);
+		if (extent <= 0) {
+			return;
+		}
+
+		if (displayed > 0.0F) {
 			context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
-					x, y, 0, 25, amount, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
+					x + HALF, y, HALF, 25, extent, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
+		} else {
+			context.drawTexture(RenderLayer::getGuiTextured, BAR_TEXTURE,
+					x + HALF - extent, y, HALF - extent, 25, extent, WIDGET_HEIGHT, BAR_WIDTH, TEXTURE_HEIGHT);
 		}
 	}
 }

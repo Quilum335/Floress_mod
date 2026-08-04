@@ -2,6 +2,7 @@ package com.floressmod.mixin;
 
 import com.floressmod.block.AmanitaBlock;
 import com.floressmod.block.MushroomBounce;
+import com.floressmod.registry.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -14,6 +15,7 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -22,6 +24,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MushroomPlantBlock.class)
 public abstract class MushroomPlantBlockMixin {
+	@Inject(method = "canPlaceAt", at = @At("HEAD"), cancellable = true)
+	private void floress$placeOnSoftTurf(
+			BlockState state,
+			WorldView world,
+			BlockPos pos,
+			CallbackInfoReturnable<Boolean> cir
+	) {
+		BlockState floor = world.getBlockState(pos.down());
+		if (floor.isOf(ModBlocks.SOFT_TURF)
+				|| floor.isOf(ModBlocks.DIRT)
+				|| floor.isOf(ModBlocks.WORMY_DIRT)) {
+			cir.setReturnValue(true);
+		}
+	}
+
 	@Inject(method = "getOutlineShape", at = @At("HEAD"), cancellable = true)
 	private void floress$redMushroomOutline(
 			BlockState state,
