@@ -1,8 +1,8 @@
 package com.floressmod.block.entity;
 
-import com.floressmod.registry.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.nbt.NbtCompound;
@@ -71,7 +71,7 @@ public final class WormyDirtBlockEntity extends BlockEntity {
 		if (peckTicks >= peckDuration) {
 			chicken.heal(1.0F);
 			world.playSound(null, pos, SoundEvents.ENTITY_GENERIC_EAT.value(), SoundCategory.NEUTRAL, 0.6F, 1.3F);
-			world.setBlockState(pos, ModBlocks.DIRT.getDefaultState(), Block.NOTIFY_ALL);
+			world.setBlockState(pos, Blocks.SPRUCE_LOG.getDefaultState(), Block.NOTIFY_ALL);
 			if (world instanceof ServerWorld serverWorld) {
 				grantCleanReputation(serverWorld, pos);
 			}

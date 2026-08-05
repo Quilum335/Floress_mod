@@ -8,20 +8,15 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 
 public final class ModBlockEntities {
-	public static final BlockEntityType<WormyDirtBlockEntity> WORMY_DIRT = Registry.register(
-			Registries.BLOCK_ENTITY_TYPE,
-			FloressMod.id("wormy_dirt"),
-			FabricBlockEntityTypeBuilder.create(WormyDirtBlockEntity::new, ModBlocks.WORMY_DIRT).build());
+	public static BlockEntityType<WormyDirtBlockEntity> WORMY_DIRT;
 
 	private ModBlockEntities() {
 	}
 
 	public static void register() {
+		WORMY_DIRT = Registry.register(
+				Registries.BLOCK_ENTITY_TYPE,
+				FloressMod.id("wormy_dirt"),
+				FabricBlockEntityTypeBuilder.create(WormyDirtBlockEntity::new, ModBlocks.WORMY_DIRT).build());
 	}
 }
-
-
-
-
-
-

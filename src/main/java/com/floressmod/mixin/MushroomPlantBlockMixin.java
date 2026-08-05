@@ -39,6 +39,17 @@ public abstract class MushroomPlantBlockMixin {
 		}
 	}
 
+	@Inject(method = "randomTick", at = @At("HEAD"), cancellable = true)
+	private void floress$noNaturalSpread(
+			BlockState state,
+			ServerWorld world,
+			BlockPos pos,
+			Random random,
+			CallbackInfo ci
+	) {
+		ci.cancel();
+	}
+
 	@Inject(method = "getOutlineShape", at = @At("HEAD"), cancellable = true)
 	private void floress$redMushroomOutline(
 			BlockState state,

@@ -6,27 +6,18 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "floress_mod:wormy_dirt"
+					"name": "floress_mod:worm",
+					"functions": [
+						{
+							"function": "minecraft:set_count",
+							"count": 5
+						}
+					]
 				}
 			],
 			"conditions": [
 				{
 					"condition": "minecraft:survives_explosion"
-				}
-			]
-		},
-		{
-			"rolls": 1,
-			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "floress_mod:worm"
-				}
-			],
-			"conditions": [
-				{
-					"condition": "minecraft:random_chance",
-					"chance": 0.5
 				}
 			]
 		}
