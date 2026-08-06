@@ -50,7 +50,7 @@ public final class ModItems {
 					new Item.Settings().registryKey(itemKey("fruit_stage_2")), 2));
 	public static final Item FRUIT_STAGE_3 = registerItem("fruit_stage_3",
 			new FruitStageBlockItem(ModBlocks.FRUIT,
-					new Item.Settings().registryKey(itemKey("fruit_stage_3")), FruitBlock.RIPE_AGE));
+					new Item.Settings().registryKey(itemKey("fruit_stage_3")), FruitBlock.RIPE_AGE + 1));
 
 	/** Трутовик — крепится на стены и потолок. */
 	public static final Item SHELF_MUSHROOM = registerBlockItem("shelf_mushroom", ModBlocks.SHELF_MUSHROOM);

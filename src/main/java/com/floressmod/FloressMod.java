@@ -9,6 +9,7 @@ import com.floressmod.reputation.ModCommands;
 import com.floressmod.reputation.ReputationEvents;
 import com.floressmod.reputation.ReputationNetworking;
 import com.floressmod.world.DrainingWaterTicker;
+import com.floressmod.world.FruitFallTicker;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
@@ -33,6 +34,7 @@ public class FloressMod implements ModInitializer {
 		ReputationEvents.register();
 		ModCommands.register();
 		DrainingWaterTicker.register();
+		FruitFallTicker.register();
 		if (FabricLoader.getInstance().isModLoaded("carryon")) {
 			CarryOnCompat.register();
 		}

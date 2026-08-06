@@ -2,6 +2,7 @@ package com.floressmod.reputation;
 
 import com.floressmod.FloressConfig;
 import com.floressmod.entity.LivingMushroomEntity;
+import com.floressmod.registry.ModBlocks;
 import com.floressmod.registry.ModTags;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
@@ -42,12 +43,12 @@ public final class ReputationEvents {
 			if (!(player instanceof ServerPlayerEntity serverPlayer)) {
 				return;
 			}
-			if (state.isIn(ModTags.REP_HIGH_LOSS)) {
+			if (state.isIn(ModTags.REP_GAIN_BREAK)) {
+				ReputationManager.add(serverPlayer, FloressConfig.REP_GAIN_BREAK_DEAD_LEAVES);
+			} else if (state.isOf(ModBlocks.WORMY_DIRT) || state.isIn(ModTags.REP_HIGH_LOSS)) {
 				ReputationManager.add(serverPlayer, FloressConfig.REP_HIGH_LOSS);
 			} else if (state.isIn(ModTags.REP_LOW_LOSS)) {
 				ReputationManager.add(serverPlayer, FloressConfig.REP_LOW_LOSS);
-			} else if (state.isIn(ModTags.REP_GAIN_BREAK)) {
-				ReputationManager.add(serverPlayer, FloressConfig.REP_GAIN_BREAK_DEAD_LEAVES);
 			}
 		});
 	}

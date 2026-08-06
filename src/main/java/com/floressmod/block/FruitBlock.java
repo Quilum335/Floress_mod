@@ -4,6 +4,7 @@ import com.floressmod.FloressConfig;
 import com.floressmod.entity.FallingFruitEntity;
 import com.floressmod.fruit.FruitLandEffects;
 import com.floressmod.fruit.FruitType;
+import com.floressmod.world.FruitFallTicker;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,6 +33,9 @@ public class FruitBlock extends Block {
 	/** 0..3 — растёт, 4 — созрел, 5 — созрел и ждёт случайной задержки падения. */
 	public static final IntProperty AGE = IntProperty.of("age", 0, 5);
 	public static final int RIPE_AGE = 4;
+	private static final int AGE_FIVE_HANG_TICKS = 200;
+	private static final int MATURITY_JITTER_MIN_TICKS = 40;
+	private static final int MATURITY_JITTER_RANDOM_TICKS = 81;
 
 	private static final VoxelShape SHAPE = Block.createCuboidShape(5.0, 8.0, 5.0, 11.0, 16.0, 11.0);
 
@@ -75,10 +79,16 @@ public class FruitBlock extends Block {
 	protected void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
 		super.onBlockAdded(state, world, pos, oldState, notify);
 		if (!world.isClient) {
-			if (state.get(AGE) < RIPE_AGE) {
+			int age = state.get(AGE);
+			if (age < RIPE_AGE) {
 				world.scheduleBlockTick(pos, this, FloressConfig.FRUIT_DAY_TICKS);
+			} else if (age == RIPE_AGE) {
+				world.scheduleBlockTick(pos, this, nextMaturityJitter(world.random));
 			} else {
-				world.scheduleBlockTick(pos, this, 20 + world.random.nextInt(181));
+				world.scheduleBlockTick(pos, this, AGE_FIVE_HANG_TICKS);
+				if (world instanceof ServerWorld serverWorld) {
+					FruitFallTicker.schedule(serverWorld, pos);
+				}
 			}
 		}
 	}
@@ -88,12 +98,18 @@ public class FruitBlock extends Block {
 		int age = state.get(AGE);
 		if (age < RIPE_AGE) {
 			// прошёл ещё один день роста
-			world.setBlockState(pos, state.with(AGE, age + 1));
-			world.scheduleBlockTick(pos, this, FloressConfig.FRUIT_DAY_TICKS);
+			int nextAge = age + 1;
+			world.setBlockState(pos, state.with(AGE, nextAge));
+			int delay = FloressConfig.FRUIT_DAY_TICKS;
+			if (nextAge == RIPE_AGE) {
+				delay += nextMaturityJitter(random);
+			}
+			world.scheduleBlockTick(pos, this, delay);
 		} else if (age == RIPE_AGE) {
 			// созрел: висит ещё полные сутки (итого ровно 5 дней от завязи) + разброс, чтобы не падали разом
 			world.setBlockState(pos, state.with(AGE, RIPE_AGE + 1));
-			world.scheduleBlockTick(pos, this, FloressConfig.FRUIT_DAY_TICKS + 20 + random.nextInt(181));
+			world.scheduleBlockTick(pos, this, AGE_FIVE_HANG_TICKS);
+			FruitFallTicker.schedule(world, pos);
 		} else {
 			// время падать
 			if (world.getBlockState(pos.down()).isAir()) {
@@ -111,5 +127,24 @@ public class FruitBlock extends Block {
 				FruitLandEffects.trigger(world, pos, state.get(TYPE));
 			}
 		}
+	}
+
+	public static void dropNow(ServerWorld world, BlockPos pos, BlockState state) {
+		if (world.getBlockState(pos.down()).isAir()) {
+			world.removeBlock(pos, false);
+			world.playSound(null, pos, net.minecraft.sound.SoundEvents.BLOCK_SWEET_BERRY_BUSH_PICK_BERRIES,
+					net.minecraft.sound.SoundCategory.BLOCKS, 0.8f, 0.9f);
+			world.spawnParticles(new net.minecraft.particle.BlockStateParticleEffect(
+							net.minecraft.particle.ParticleTypes.BLOCK, state),
+					pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 6, 0.25, 0.2, 0.25, 0.02);
+			FallingFruitEntity.spawn(world, pos, state.with(AGE, RIPE_AGE));
+		} else {
+			world.removeBlock(pos, false);
+			FruitLandEffects.trigger(world, pos, state.get(TYPE));
+		}
+	}
+
+	private static int nextMaturityJitter(Random random) {
+		return MATURITY_JITTER_MIN_TICKS + random.nextInt(MATURITY_JITTER_RANDOM_TICKS);
 	}
 }
